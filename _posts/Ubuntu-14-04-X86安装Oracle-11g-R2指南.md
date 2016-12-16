@@ -7,7 +7,7 @@ comments: true
 ---
 
 ><font color=#0000FF face="微软雅黑" size=4>如果没有数据库，我们的互联网会是什么样？</font>
-<div align='right'><font color=#000000 face="微软雅黑" size=4>Copyright © CUIT  Bigdata Research Lab</font></div>
+<div align='right'><font color=#FF4500 face="微软雅黑" size=2>Copyright © CUIT  Bigdata Research Lab</font></div>
 <div align='center'><font color=#000000 face="微软雅黑" size=8>Oracle 11g R2 32位安装指南</font></div>
 <div align='center'><font color=#000000 face="微软雅黑" size=5>On Ubuntu 14.04 x86</font></div>
 <div align='center'><font color=#000000 face="微软雅黑" size=6>序</font></div>
@@ -286,7 +286,7 @@ root@主机名#: xhost + //必须使用root账户执行该命令
 #### 2.1.4 Error in invoking target 'agent_nmhs' of makefile
 　　<font color=#FF0000 size=4>针对错误：“Error in invoking target 'agent_nmhs' of makefile” ... XX/XX/ctx/sysman/lib/ins_emagent.mk'. see '/XX/XX/XX-XX-XX.log' for details”.如下图1-2所示：</font>
 ![image](Ubuntu-14-04-X86安装Oracle-11g-R2指南/错误agent_nmhs.png)
-<div align='center'>图1-2　　agent_nmhs错误</div>
+<div align='center'>图2-1　　agent_nmhs错误</div>
 　　<font color=#0000FF size=4>解决方法：根据提示到相关目录下找到文件ins_emagent.mk，打开并编辑，查找并替换如下内容：</font>
 ```bash
 ****文件内容截断
@@ -304,7 +304,7 @@ $(MK_EMAGENT_EMECTL) -lnnz11 //替换后内容
 #### 2.1.5 Error in invoking target 'all_no_orcl' of makefile
 　　<font color=#FF0000 size=4>针对错误：“Error in invoking target 'all_no_orcl' of makefile” ... 'XX/XX/ctx/rdbms/lib/ins_rdbms.mk'. see '/XX/XX/XX-XX-XX.log' for details”.如下图1-3所示：</font>
 ![image](Ubuntu-14-04-X86安装Oracle-11g-R2指南/错误all_no_orcl.png)
-<div align='center'>图1-2　　all_no_orcl错误</div>
+<div align='center'>图2-2　　all_no_orcl错误</div>
 　　<font color=#0000FF size=4>解决方法：出现这样的错误，需要修改四个安装文件的内容，文件修改的先后顺序可任意，但是一定要在修改完四个文件后再继续安装，否则还是会出错。先将四个安装文件的修改分述如下：</font>
 
 　　<font color=#0000FF size=4>a.找到安装文件genorasdksh，查找并替换相关内容：</font>
@@ -356,3 +356,129 @@ $(ADE_DEL_FILE_CMD) $(PURECMDS) gcc -Wl,--no-as-needed $(OLAPPRELINKOPTS) $(LDFL
 ****文件内容截断
 ```
 　　<font color=#0000FF size=4>修改完上述文件后，保存，然后在弹出的错误提示框中点击”重试“继续安装过程，如果不出意外，数据库即可以顺利安装到系统中。</font>
+
+
+
+
+## 三、完成所有的安装
+### 3.1 完成数据库安装
+　　<font color=#000000 size=4>上面的错误解决之后，数据库一般都可以顺利的完成安装，最后会弹出一个提示框，提示用户按照要求执行最后两个命令，完成数据库的安装，命令如下：</font>
+```bash
+用户名@主机名$: sudo /opt/oracle/oraInventory/orainstRoot.sh 
+用户名@主机名$: sudo /opt/oracle/Oracle11gee/product/11.2.0/dbhome_1/root.sh
+```
+　　<font color=#FF0000 size=4>备注：在执行第二个命令的时候，会提示用户输入系统命令所在的目录，我们推荐设置为/usr/lib，当然用户可以根据自己的情况设置合理的值。在安装过程中，安装程序会提示设置数据库相关用户的登陆密码，用户可以根据自己需求设定，但一定要记清楚数据库用户名和对应的密码，以便在运行我们的程序时能够正确访问数据库。</font>
+　　<font color=#000000 size=4>至此，数据库的安装已经彻底完成，用户可以通过在浏览器中键入地址 https://localhost:1158/em 来访问和管理数据库。</font>
+### 3.2 完成sql/plus客户端的安装
+　　<font color=#000000 size=4>Oracle安装完成后，可以在浏览器中进行管理维护，但是为了提高开发、管理、维护效率，我们还要安装相应的客户端。这里我们提供了sql/plus客户端的安装配置方法。首先去官网下载对应版本的客户端(本文中为11.2.0.1)，官方共提供了三个安装包，分别是：</br></font>
+　　<font color=#000000 size=4>1.oracle-instantclient11.2-basic-11.2.0.1.0-1.i386.rpm</font>
+　　<font color=#000000 size=4>2.oracle-instantclient11.2-devel-11.2.0.1.0-1.i386.rpm</font>
+　　<font color=#000000 size=4>3.oracle-instantclient-basic-linux32-11.2.0.1.zip</br></font>
+　　<font color=#000000 size=4>由于Ubuntu系统的包管理器只能识别.deb类型的安装包，所以要安装官方提供的.rpm包，我们必须借助中间工具alien软件，关于alien包我们在第一节中的表里已经列出来了，如果用户是严格按照我们的手册执行的，那么到这一步时，系统里就有alien软件了，可以通过执行一下命令将两个rpm包安装起来：</font>
+```bash
+用户名@主机名$: sudo alien -i oracle-instantclient11.2-basic-xx.rpm
+用户名@主机名$: sudo alien -i oracle-instantclient11.2-devel-xx.rpm
+```
+　　<font color=#000000 size=4>执行完后，将instantclient-basic-linux32-11.2.0.1.zip这个压缩包解压到/opt/oracle目录下，然后在终端执行sqlplus命令应该会有如下图1-4所示输出结果：</font>
+![image](Ubuntu-14-04-X86安装Oracle-11g-R2指南/执行sqlplus.png)
+<div align='center'>图2-3　　执行sqlplus</div>　
+　　<font color=#000000 size=4>这个时候输入数据库的用户名和密码，即可登陆到数据库。为了使我们开发的程序能够通过OCCI连接和操作数据库，用户还需要将我们提供的SDK压缩包解压到sqlplus的目录下，即/opt/oracle/instantclient_11_2文件夹下。</font>
+
+
+
+
+
+
+## 四、后期运行可能遇到的问题及解决方法
+### 4.1 启动数据库
+　　<font color=#000000 size=4>第一次成功安装完成后，如果不重启系统，一般不会遇到什么问题，但如果重启了系统，再次启动数据库时就会遇到一些问题。重启系统后，用户可以通过使用如下两个命令启动数据库服务：</font>
+```bash
+用户名@主机名$: lsnrctl start //启动监听器
+用户名@主机名$: emctl start dbconsole //启动控制台
+用户名@主机名$: lsnrctl status //查看监听器状态，该命令非必须执行，用户可通过该命令查看目前数据库监听器状态，!!! 该命令非必须执行 !!!.
+```
+　　<font color=#FF0000 size=4>备注：也可以将上述命令加入启动项，重启后让系统自动去执行，具体教程请参考Linux相关命令。</font>
+　　<font color=#000000 size=4>在启动数据库服务或者开启数据库实例时，用户可能会遇到一些问题，现对我们目前已经遇到的问题及对应解决方法分述如下：</font>
+#### 4.1.1 权限不够
+　　<font color=#000000 size=4>如果提示用户：ORA-01031:insufficient privileges，则表明权限不够，此时需要修改文件夹/var/tmp/.oracle的权限为775（或者777），或者登陆数据库通过grant命令放权给相关用户。</font>
+#### 4.1.1 emctl关闭或启动dbcontrol出错
+　　<font color=#FF0000 size=4>如果在使用emctl start(或者stop) dbconsole时提示：</font>
+```bash
+***输出截断
+OC4J Configuration issue. 	/opt/oracle/product/11.2.0/dbhome_1/oc4j/j2ee/OC4J_DBConsole_XXXX_orcl not found.
+EM Configuration issue. 	/opt/oracle/product/11.2.0/dbhome_1/XXXX_orcl not found.
+***输出截断
+```
+　　<font color=#000000 size=4>出现这种错误的原因是Oracle会根据获取到的系统主机名来选择使用相应的EM资料库关闭或启动em控制器，例如在安装Ubunt系统时给主机起了个dev的名称，Oracle获取到的主机名就是dev，然后会寻找：</br></br>　　1.OC4J_DBConsole_dev_orcl</br>　　2.dev_orcl</br></font>
+　　<font color=#000000 size=4>这两个资料库完成关闭或启动EM控制器的任务。但是Oracle本身只会根据</br></font>
+　　<font color=#000000 size=4> 1.$ORACLE_HOME/network/admin/listener.ora</br></font>
+　　<font color=#000000 size=4>文件中的主机名创建资料库。listener.ora中的HOST默认是localhost，所以Oracle默认创建的资料库是：</br></br>　　1.OC4J_DBConsole_localhost_orcl</br>　　2.localhost_orcl</br></font>
+　　<font color=#000000 size=4>这就会导致上述找不到文件夹的问题。</font>
+　　<font color=#000000 size=4>解决方法如下述步骤：</font>
+```bash
+用户名@主机名$: hostname //查询主机名
+```
+　　<font color=#000000 size=4>先执行上述命令，将$ORACLE_HOME/network/admin/listener.ora文件中的HOST=localhost等式右边的值localhost改为上述命令查询的结果。再分别执行下述两个命令：</font>
+```bash
+用户名@主机名$: cp -rp /opt/oracle/product/11.2.0/dbhome_1/oc4j/j2ee/OC4J_DBConsole_localhost_orcl   /opt/oracle/product/11.2.0/dbhome_1/oc4j/j2ee/OC4J_DBConsole_XX_orcl 
+用户名@主机名$: cp -rp /opt/oracle/product/11.2.0/dbhome_1/localhost_orcl    /opt/oracle/product/11.2.0/dbhome_1/XX_orcl
+```
+　　<font color=#FF0000 size=4>备注：上面的XX修改为你的主机名。特别注意，如果修改了Ubuntu主机名或IP地址后同样会导致这样的问题，解决办法也是一样的，所以在修改了主机的相关信息后请记得及时修改相关配置。	</font>
+### 4.2 使用数据库
+#### 4.2.1 环境配置错误
+　　<font color=#000000 size=4>a.如果在通过sqlplus连接数据库时提示：<font color=#FF0000 size=4>"... libsqlplus.so can not open shared object file:no such file or directory."</font>，则一般是之前的环境变量没有配置好，请认真核查。</font>
+　　<font color=#000000 size=4>b.终端下使用“emctl start dbcontrol”命令启动em控制台时出现：<font color=#FF0000 size=4>"Environment variable ORACLE_UNQNAME not defined. Please set ORACLE_UNQNAME to database unique name."</font>则是由于环境变量ORACLE_UNQNAMEDE的配置不正确，可以通过如下命令设置：</font>
+```bash
+用户名@主机名$: export ORACLE_UNQNAME = XXX
+```
+#### 4.2.2 库文件加载错误
+　　<font color=#000000 size=4>如果提示：<font color=#FF0000 size=4>"... error while loading shared libraries:libaio.so.1"</font>则是因为系统中没有该库文件，请自行下载安装。</font>
+#### 4.2.3 游标数量不够
+　　<font color=#000000 size=4>如果提示：<font color=#FF0000 size=4>"ORA-010000:maximium open cursors exceed." 以及 "ORA-00604:error occurred at recursive SQL level."</font>，则是因为数据库默认配置的游标数量不够，因为我们的数据挖掘部分程序是采用的多线程并行算法实现的，程序运行过程中会多线程并发访问数据库，因此需要大量游标资源，可通过如下命令更改数据库游标：</font>
+```bash
+SQL> show parameter open_cursors //查看数据库当前游标数量
+SQL> alter system set OPEN_CURSORS = XXXX //修改数据库游标数量，该值用户可自由选择，据我们测试，该值设置为1200即可满足程序运行要求
+```
+　　<font color=#000000 size=4>备注：该设置在重启数据库后即失效，需要用户每次启动后手动设置，如果想要永久生效，请自行参考相关教程设置。</font>
+#### 4.2.4 客户端乱码
+　　<font color=#000000 size=4>如果用户在使用sqlplus客户端操作包含中文的txt文档时（例如加载为外表）可能会产生乱码，解决方法如下：</font>
+　　<font color=#000000 size=4>1.设置oracle服务器端编码格式为：UTF8</font>
+　　<font color=#000000 size=4>2.设置连接客户端sqlplus编码格式为：UTF8</font>
+　　<font color=#000000 size=4>3.将该txt数据文件保存为编码格式：UTF8</font>
+　　<font color=#000000 size=4>4.在将该txt数据文档导入外表时，编码格式设置为:UTF8</font>
+#### 4.2.5 EM控制台乱码
+　　<font color=#000000 size=4>如果出现EM控制台中的按钮都是乱码，而其他部分正常则是由于Java字体缺失导致的，因为EM的按钮都是Java生成的。</font>
+　　<font color=#000000 size=4>解决办法是：在JDK(或JRE)的字体文件夹下新建中文字体目录fallback，并将Windows系统下的simsun.ttc字体文件复制到fallback下，然后将其改名为simsun.ttf并授予恰当权限，其执行命令如下：</font>
+```bash
+用户名@主机名$: sudo mkdir $ORACLE_HOME/jdk/jre/lib/fonts/fallback
+用户名@主机名$: sudo cp simsun.ttc $ORACLE_HOME/jdk/jre/lib/fonts/fallback/
+用户名@主机名$: sudo mv $ORACLE_HOME/jdk/jre/lib/fonts/fallback/simsun.ttc 	
+用户名@主机名$: sudo $ORACLE_HOME/jdk/jre/lib/fonts/fallback/simsun.ttf
+用户名@主机名$: sudo chmod 444 $ORACLE_HOME/jdk/jre/lib/fonts/fallback/simsun.ttf
+```
+　　<font color=#000000 size=4>执行完后需要清理一下缓存,然后再重启EM即可，命令如下：</font>
+```bash
+用户名@主机名$: sudo rm $ORACLE_HOME/oc4j/j2ee/oc4j_applications/applications/em/em/cabo/images/cache/zhs/*.gif
+用户名@主机名$: emctl stop dbconsole
+用户名@主机名$: emctl start dbconsole
+```
+　　<font color=#000000 size=4>然后再登陆Web页面查看,中文显示即正常了。</font>
+#### 4.2.6 客户端连接出错
+　　<font color=#000000 size=4>在终端运行sqlplus ／ as sysdba命令进入SQLPlus工具时可能出现错误：</font>
+```bash
+SQL> sqlplus ／ as sysdba
+sqlplus: error while loading shared libraries:  
+  /XX/app/oracle/product/11.1.0/db_1/lib/libnnz11.so: cannot restore segment prot after reloc: Permission denied
+```
+　　<font color=#000000 size=4>出现这个错误是由于SELinux导致的，解决办法是禁用SELinux，修改系统配置文件/etc/sysconfig/selinux内容SELINUX=disabled，或者使用chcon命令执行：</font>
+```bash
+用户名@主机名$: chcon -t texrel_shlib_t /usr/local/rsi/idl_6.1/bin/bin.linux.x86/*.so
+```
+　　<font color=#FF0000 size=4>备注：同样的，权限不够请使用sudo执行。</font>
+## 五、 结束
+### 5.1 结语
+　　<font color=#000000 size=4>欢迎大家补充指正，我会及时把大家的意见加入。</br></font>
+　　<font color=#000000 size=4>Have a nice day!</font>
+　　<div align='center'><font color=#FF00FF face="微软雅黑" size=3>CUIT Bigdata Research Lab</font>
+　　<font color=#000000 size=4></font>
+　　<font color=#000000 size=4></font>
