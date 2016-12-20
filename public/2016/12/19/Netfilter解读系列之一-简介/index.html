@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Netfilter解读系列之一：简介 | Hello Flat2010</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Read the fucking source code!
+
+
+&amp;#x4E00;&amp;#x3001;&amp;#x6982;&amp;#x8FF0;1.1 What&amp;#x2019;s Netfilter&amp;#xFF1F;12345678910111213141516171819202122232425root@developer#:info netfilter* Description:    netfilter.o">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netfilter解读系列之一：简介">
+<meta property="og:url" content="http://yoursite.com/2016/12/19/Netfilter解读系列之一-简介/index.html">
+<meta property="og:site_name" content="Hello Flat2010">
+<meta property="og:description" content="Read the fucking source code!
+
+
+&amp;#x4E00;&amp;#x3001;&amp;#x6982;&amp;#x8FF0;1.1 What&amp;#x2019;s Netfilter&amp;#xFF1F;12345678910111213141516171819202122232425root@developer#:info netfilter* Description:    netfilter.o">
+<meta property="og:image" content="http://yoursite.com/2016/12/19/Netfilter解读系列之一-简介/挂载点示意图.png">
+<meta property="og:image" content="http://yoursite.com/2016/12/19/Netfilter解读系列之一-简介/挂载点示意图2.png">
+<meta property="og:updated_time" content="2016-12-19T12:17:48.202Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netfilter解读系列之一：简介">
+<meta name="twitter:description" content="Read the fucking source code!
+
+
+&amp;#x4E00;&amp;#x3001;&amp;#x6982;&amp;#x8FF0;1.1 What&amp;#x2019;s Netfilter&amp;#xFF1F;12345678910111213141516171819202122232425root@developer#:info netfilter* Description:    netfilter.o">
+<meta name="twitter:image" content="http://yoursite.com/2016/12/19/Netfilter解读系列之一-简介/挂载点示意图.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hello Flat2010" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hello Flat2010</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Life is short, so let&#39;s make it different.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Netfilter解读系列之一-简介" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/12/19/Netfilter解读系列之一-简介/" class="article-date">
+  <time datetime="2016-12-19T02:36:48.000Z" itemprop="datePublished">2016-12-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Netfilter解读系列之一：简介
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p><font color="#0000FF" face="&#x5FAE;&#x8F6F;&#x96C5;&#x9ED1;" size="4">Read the fucking source code!</font></p>
+<hr>
+</blockquote>
+<h2 id="&#x4E00;&#x3001;&#x6982;&#x8FF0;"><a href="#&#x4E00;&#x3001;&#x6982;&#x8FF0;" class="headerlink" title="&#x4E00;&#x3001;&#x6982;&#x8FF0;"></a>&#x4E00;&#x3001;&#x6982;&#x8FF0;</h2><h3 id="1-1-What&#x2019;s-Netfilter&#xFF1F;"><a href="#1-1-What&#x2019;s-Netfilter&#xFF1F;" class="headerlink" title="1.1 What&#x2019;s Netfilter&#xFF1F;"></a>1.1 What&#x2019;s Netfilter&#xFF1F;</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">root@developer<span class="comment">#:info netfilter</span></div><div class="line">* Description:</div><div class="line">    netfilter.org is home to the software of the packet filtering </div><div class="line">framework inside the Linux 2.4.x and later kernel series. Software </div><div class="line">commonly associated with netfilter.org is iptables.  </div><div class="line"></div><div class="line">    Software inside this framework enables packet filtering, network </div><div class="line">address [and port] translation (NA[P]T) and other packet mangling. It </div><div class="line">is the re-designed and heavily improved successor of the previous Linux </div><div class="line">2.2.x ipchains and Linux 2.0.x ipfwadm systems.  </div><div class="line"></div><div class="line">    netfilter is a <span class="built_in">set</span> of hooks inside the Linux kernel that allows </div><div class="line">kernel modules to register callback <span class="built_in">functions</span> with the network stack. </div><div class="line">A registered callback <span class="keyword">function</span> is <span class="keyword">then</span> called back <span class="keyword">for</span> every packet </div><div class="line">that traverses the respective hook within the network stack.</div><div class="line"></div><div class="line">    iptables is a generic table structure <span class="keyword">for</span> the definition of rulesets. </div><div class="line">Each rule within an IP table consists of a number of classifiers (iptables </div><div class="line">matches) and one connected action (iptables target). </div><div class="line"> </div><div class="line">    netfilter, ip_tables, connection tracking (ip_conntrack, nf_conntrack) </div><div class="line">and the NAT subsystem together build the major parts of the framework.</div><div class="line"></div><div class="line">* Usage:</div><div class="line">    &#xB7;&#xB7;&#xB7; &#xB7;&#xB7;&#xB7;</div></pre></td></tr></table></figure>
+<p>&#x3000;&#x3000;<font color="#000000" size="3"><font color="#000000" size="3">&#x4EE5;&#x4E0A;&#x5185;&#x5BB9;&#x6458;&#x81EA;netfilter&#x9879;&#x76EE;&#x5B98;&#x65B9;&#x7F51;&#x7AD9; <a href="http://www.netfilter.org/index.html" target="_blank" rel="external">http://www.netfilter.org/index.html</a> </font></font></p>
+<h3 id="1-2-&#x4E2D;&#x6587;&#x6982;&#x8FF0;"><a href="#1-2-&#x4E2D;&#x6587;&#x6982;&#x8FF0;" class="headerlink" title="1.2 &#x4E2D;&#x6587;&#x6982;&#x8FF0;"></a>1.2 &#x4E2D;&#x6587;&#x6982;&#x8FF0;</h3><p>&#x3000;&#x3000;<font color="#000000" size="3">&#x4ECE;&#x4E0A;&#x9762;1.1&#x7684;&#x53D9;&#x8FF0;&#x4E2D;&#x53EF;&#x4EE5;&#x4E86;&#x89E3;&#x5230;&#xFF0C;Netfilter&#x662F;Linux&#x4E0A;&#xFF08;&#x2265;2.4.X&#xFF09;&#x7EE7;ipfwadm&#x3001;ipchains&#x4E4B;&#x540E;&#x7684;&#x4E00;&#x4E2A;&#x6846;&#x67B6;&#xFF08;&#x9632;&#x706B;&#x5899;&#xFF09;&#x3002;&#x4E09;&#x8005;&#x5728;&#x65F6;&#x95F4;&#x7EBF;&#x4E0A;&#x7684;&#x5173;&#x7CFB;&#x4E3A;&#xFF1A;</font><br>&#x3000;&#x3000;<font color="#0000FF" size="2">ipfwadm&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;ipchains&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;netfilter</font><br>&#x3000;&#x3000;<font color="#000000" size="2">&#x3000;&#x3000;|&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;|&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;|</font><br>&#x3000;&#x3000;<font color="#000000" size="2">=============================================&gt;</font><br>&#x3000;&#x3000;<font color="#FF0000" size="2">&#x3000;2.0.X&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;2.2.X&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;&#x3000;2.4.X</font><br>&#x3000;&#x3000;<font color="#000000" size="3">&#x5176;&#x6838;&#x5FC3;&#x601D;&#x60F3;&#x6709;&#x4E24;&#x70B9;&#xFF1A;<br>&#x3000;&#x3000;1.Hook function&#xFF08;&#x94A9;&#x5B50;/&#x56DE;&#x8C03;&#x51FD;&#x6570;&#xFF09;&#x3002;<br>&#x3000;&#x3000;2.Hook point&#xFF08;&#x6302;&#x8F7D;&#x70B9;&#xFF09;&#x3002;</font><br>&#x3000;&#x3000;<font color="#000000" size="3">&#x5B83;&#x63D0;&#x4F9B;&#x7684;&#x6302;&#x8F7D;&#x70B9;&#x5747;&#x5904;&#x4E8E;&#x6570;&#x636E;&#x5305;&#x4F20;&#x8F93;&#x6D41;&#x7A0B;&#x4E2D;&#x7684;&#x5173;&#x952E;&#x4F4D;&#x7F6E;&#xFF0C;&#x4F17;&#x591A;&#x6302;&#x8F7D;&#x70B9;&#x8BA9;&#x7528;&#x6237;&#x53EF;&#x4EE5;&#x5728;&#x4E0D;&#x540C;&#x7684;&#x5730;&#x65B9;&#x5BF9;&#x8FD9;&#x4E9B;&#x6570;&#x636E;&#x5305;&#x8FDB;&#x884C;&#x64CD;&#x4F5C;&#xFF0C;&#x4ECE;&#x800C;&#x5B9E;&#x73B0;&#x5F3A;&#x5927;&#x7684;&#x6570;&#x636E;&#x5305;&#x5904;&#x7406;&#x529F;&#x80FD;&#x3002;&#x4E0B;&#x9762;&#x662F;&#x8FD9;&#x4E9B;&#x6302;&#x8F7D;&#x70B9;&#x7684;&#x4E00;&#x4E2A;&#x793A;&#x610F;&#x56FE;1-1&#xFF1A;</font><br><img src="/2016/12/19/Netfilter&#x89E3;&#x8BFB;&#x7CFB;&#x5217;&#x4E4B;&#x4E00;-&#x7B80;&#x4ECB;/&#x6302;&#x8F7D;&#x70B9;&#x793A;&#x610F;&#x56FE;.png" alt="image"></p>
+<p><div align="center">&#x56FE;1-1&#x3000;&#x3000;&#x6302;&#x8F7D;&#x70B9;&#x793A;&#x610F;&#x56FE;</div><br>&#x3000;&#x3000;<font color="#FF0000" size="3">&#x8BF4;&#x660E;&#xFF1A;&#x672C;&#x56FE;&#x53C2;&#x8003;&#x81EA; <a href="http://blog.chinaunix.net/uid-23069658-id-3160506.html" target="_blank" rel="external">http://blog.chinaunix.net/uid-23069658-id-3160506.html</a> <br></font><br>&#x3000;&#x3000;<font color="#000000" size="3">&#x7531;&#x4E0A;&#x56FE;&#x53EF;&#x77E5;&#x5171;&#x6709;5&#x4E2A;&#x6302;&#x8F7D;&#x70B9;&#xFF0C;&#x5B83;&#x4EEC;&#x5728;&#x6E90;&#x4EE3;&#x7801;(include/uapi/linux/netfilter_ipv4.h)&#x4E2D;&#x7684;&#x5B9A;&#x4E49;&#x5982;&#x4E0B;&#xFF1A;</font><br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">Linux&#x5185;&#x6838;&#x7248;&#x672C;&#xFF1A;<span class="number">3.10</span><span class="number">.0</span><span class="number">.327</span><span class="number">.36</span><span class="number">.3</span>.el7.x86_64</div><div class="line">&#x53D1;&#x884C;&#x7248;&#x672C;&#xFF1A;Centos7_1511_X64</div><div class="line"></div><div class="line">****&#x6587;&#x4EF6;&#x8F93;&#x51FA;&#x622A;&#x65AD;</div><div class="line"><span class="number">42</span></div><div class="line"><span class="number">43</span> <span class="comment">/* IP Hooks */</span></div><div class="line"><span class="number">44</span> <span class="comment">/* After promisc drops, checksum checks. */</span></div><div class="line"><span class="number">45</span> <span class="meta">#<span class="meta-keyword">define</span> NF_IP_PRE_ROUTING		0</span></div><div class="line"><span class="number">46</span> <span class="comment">/* If the packet is destined for this box. */</span></div><div class="line"><span class="number">47</span> <span class="meta">#<span class="meta-keyword">define</span> NF_IP_LOCAL_IN		1</span></div><div class="line"><span class="number">48</span> <span class="comment">/* If the packet is destined for another interface. */</span></div><div class="line"><span class="number">49</span> <span class="meta">#<span class="meta-keyword">define</span> NF_IP_FORWARD		2</span></div><div class="line"><span class="number">50</span> <span class="comment">/* Packets coming from a local process. */</span></div><div class="line"><span class="number">51</span> <span class="meta">#<span class="meta-keyword">define</span> NF_IP_LOCAL_OUT		3</span></div><div class="line"><span class="number">52</span> <span class="comment">/* Packets about to hit the wire. */</span></div><div class="line"><span class="number">53</span> <span class="meta">#<span class="meta-keyword">define</span> NF_IP_POST_ROUTING		4</span></div><div class="line"><span class="number">54</span> <span class="meta">#<span class="meta-keyword">define</span> NF_IP_NUMHOOKS		5</span></div><div class="line"><span class="number">55</span></div><div class="line">****&#x6587;&#x4EF6;&#x8F93;&#x51FA;&#x622A;&#x65AD;</div></pre></td></tr></table></figure></p>
+<p>&#x3000;&#x3000;<font color="#FF0000" size="3">&#x8BF4;&#x660E;&#xFF1A;&#x4E0D;&#x540C;&#x53D1;&#x884C;&#x7248;&#x672C;&#xFF0C;&#x4E0D;&#x540C;&#x5185;&#x6838;&#x7248;&#x672C;&#x4E2D;&#x5BF9;&#x8FD9;5&#x4E2A;&#x6302;&#x8F7D;&#x70B9;&#x7684;&#x5B8F;&#x5B9A;&#x4E49;&#x6240;&#x4F7F;&#x7528;&#x7684;&#x540D;&#x79F0;&#x524D;&#x7F00;&#xFF08;&#x6BD4;&#x5982;&#x4E0A;&#x9762;&#x4F7F;&#x7528;&#x7684;&#x662F;NF&#xFF09;&#x4F1A;&#x6709;&#x6240;&#x5DEE;&#x5F02;&#xFF0C;&#x4F46;&#x540E;&#x7F00;&#x57FA;&#x672C;&#x90FD;&#x662F;&#x76F8;&#x540C;&#x7684;&#x3002;</font><br>&#x3000;&#x3000;<font color="#000000" size="3">&#x7B2C;54&#x884C;&#x4E2D;&#x5B9A;&#x4E49;&#x7684;&#x5B8F;&#x201C; NF_IP_NUMHOOKS&#x201D;&#x6839;&#x636E;&#x5176;&#x540D;&#x79F0;&#x63A8;&#x6D4B;&#x4E3A;&#x7EDF;&#x8BA1;&#x5171;&#x5B9A;&#x4E49;&#x4E86;&#x591A;&#x5C11;&#x4E2A;&#x6302;&#x8F7D;&#x70B9;&#xFF08;&#x672A;&#x8BC1;&#x5B9E;&#xFF0C;&#x7F51;&#x4E0A;&#x4E5F;&#x672A;&#x627E;&#x5230;&#x76F8;&#x5173;&#x8D44;&#x6599;&#xFF09;&#x3002;&#x6211;&#x4EEC;&#x628A;&#x56FE;1-1&#x4E2D;&#x5BF9;&#x5E94;&#x7684;HookPoint&#x66FF;&#x6362;&#x4E3A;&#x4E0A;&#x8FF0;&#x5B8F;&#x5B9A;&#x4E49;&#xFF0C;&#x5E76;&#x5728;&#x4E0B;&#x65B9;&#x6807;&#x6CE8;&#x51FA;&#x5176;&#x503C;&#xFF0C;&#x65B9;&#x4FBF;&#x7406;&#x89E3;&#xFF0C;&#x5982;&#x4E0B;&#x56FE;1-2&#x6240;&#x793A;&#xFF1A;</font><br><img src="/2016/12/19/Netfilter&#x89E3;&#x8BFB;&#x7CFB;&#x5217;&#x4E4B;&#x4E00;-&#x7B80;&#x4ECB;/&#x6302;&#x8F7D;&#x70B9;&#x793A;&#x610F;&#x56FE;2.png" alt="image"></p>
+<p><div align="center">&#x56FE;1-2&#x3000;&#x3000;&#x6302;&#x8F7D;&#x70B9;&#x5B8F;&#x5B9A;&#x4E49;&#x66FF;&#x6362;&#x540E;&#x793A;&#x610F;&#x56FE;</div><br>&#x3000;&#x3000;<font color="#000000" size="3">&#x901A;&#x8FC7;&#x5728;&#x8FD9;&#x4E9B;&#x70B9;&#x4E0A;&#x6CE8;&#x518C;&#x4E0D;&#x540C;&#x7684;&#x51FD;&#x6570;&#xFF08;&#x5373;hook&#x51FD;&#x6570;&#xFF09;&#xFF0C;&#x5C31;&#x53EF;&#x4EE5;&#x5B9E;&#x73B0;&#x5BF9;&#x6570;&#x636E;&#x5305;&#x7684;&#x5404;&#x79CD;&#x64CD;&#x4F5C;&#xFF0C;&#x6EE1;&#x8DB3;&#x6211;&#x4EEC;&#x4E0D;&#x540C;&#x7684;&#x9700;&#x6C42;&#x3002;&#x6BCF;&#x4E2A;hook&#x70B9;&#x53C8;&#x53EF;&#x4EE5;&#x6CE8;&#x518C;&#x591A;&#x4E2A;hook&#x51FD;&#x6570;&#xFF0C;&#x7CFB;&#x7EDF;&#x4F1A;&#x6309;&#x7167;&#x8FD9;&#x4E9B;hook&#x51FD;&#x6570;&#x7684;&#x4F18;&#x5148;&#x7EA7;&#x987A;&#x5E8F;&#x8FDB;&#x884C;&#x5904;&#x7406;&#xFF0C;&#x800C;&#x8FD9;&#x4E9B;&#x51FD;&#x6570;&#x7684;&#x4F18;&#x5148;&#x7EA7;&#x662F;&#x8DDF;&#x4ED6;&#x4EEC;&#x6240;&#x5C5E;&#x7684;iptables&#x8868;&#x7C7B;&#x578B;&#x76F8;&#x5173;&#x7684;&#xFF0C;&#x540E;&#x9762;&#x4F1A;&#x8BE6;&#x7EC6;&#x8BF4;&#xFF0C;&#x8FD9;&#x91CC;&#x5148;&#x7ED9;&#x51FA;&#x6E90;&#x4EE3;&#x7801;&#x4E2D;&#x5173;&#x4E8E;&#x51FD;&#x6570;&#x4F18;&#x5148;&#x7EA7;&#x7684;&#x5B9A;&#x4E49;&#xFF1A;</font><br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="number">55</span></div><div class="line"><span class="number">56</span></div><div class="line"><span class="number">57</span> <span class="keyword">enum</span> nf_ip_hook_priorities {</div><div class="line"><span class="number">58</span> 	NF_IP_PRI_FIRST = INT_MIN,</div><div class="line"><span class="number">59</span> 	NF_IP_PRI_CONNTRACK_DEFRAG = <span class="number">-400</span>,</div><div class="line"><span class="number">60</span> 	NF_IP_PRI_RAW = <span class="number">-300</span>,</div><div class="line"><span class="number">61</span>	NF_IP_PRI_SELINUX_FIRST = <span class="number">-225</span>,</div><div class="line"><span class="number">62</span>	NF_IP_PRI_CONNTRACK = <span class="number">-200</span>,</div><div class="line"><span class="number">63</span>	NF_IP_PRI_MANGLE = <span class="number">-150</span>,</div><div class="line"><span class="number">64</span>	NF_IP_PRI_NAT_DST = <span class="number">-100</span>,</div><div class="line"><span class="number">65</span>	NF_IP_PRI_FILTER = <span class="number">0</span>,</div><div class="line"><span class="number">66</span>	NF_IP_PRI_SECURITY = <span class="number">50</span>,</div><div class="line"><span class="number">67</span>	NF_IP_PRI_NAT_SRC = <span class="number">100</span>,</div><div class="line"><span class="number">68</span>	NF_IP_PRI_SELINUX_LAST = <span class="number">225</span>,</div><div class="line"><span class="number">69</span>	NF_IP_PRI_CONNTRACK_HELPER = <span class="number">300</span>,</div><div class="line"><span class="number">70</span>	NF_IP_PRI_CONNTRACK_CONFIRM = INT_MAX,</div><div class="line"><span class="number">71</span>	NF_IP_PRI_LAST = INT_MAX,</div><div class="line"><span class="number">72</span> };</div><div class="line"><span class="number">73</span></div><div class="line">****&#x6587;&#x4EF6;&#x8F93;&#x51FA;&#x622A;&#x65AD;</div></pre></td></tr></table></figure></p>
+<p>&#x3000;&#x3000;<font color="#000000" size="3">&#x51FD;&#x6570;&#x4F18;&#x5148;&#x7EA7;&#x7684;&#x5B9A;&#x4E49;&#x6E90;&#x4EE3;&#x7801;&#x5728;&#x8BE5;&#x53D1;&#x884C;&#x7248;&#x4E2D;&#x7D27;&#x63A5;&#x7740;HookPoint&#x7684;&#x4EE3;&#x7801;&#xFF0C;&#x662F;&#x4E00;&#x4E2A;&#x679A;&#x4E3E;&#x7C7B;&#x578B;&#x3002;&#x65E2;&#x7136;&#x540C;&#x4E00;&#x4E2A;HP&#xFF08;HookPoint&#xFF0C;&#x4E0B;&#x540C;&#xFF09;&#x53EF;&#x4EE5;&#x6CE8;&#x518C;&#x591A;&#x4E2A;hook&#x51FD;&#x6570;&#xFF0C;&#x5E76;&#x4E14;&#x8FD9;&#x4E9B;hook&#x51FD;&#x6570;&#x7684;&#x4F18;&#x5148;&#x7EA7;&#x5E76;&#x4E0D;&#x76F8;&#x540C;&#xFF0C;&#x800C;&#x7CFB;&#x7EDF;&#x8981;&#x4FDD;&#x8BC1;&#x6BCF;&#x4E00;&#x4E2A;hook&#x51FD;&#x6570;&#x90FD;&#x4F1A;&#x88AB;&#x6267;&#x884C;&#xFF0C;&#x90A3;&#x4E48;&#x5C31;&#x8981;&#x6C42;&#x6BCF;&#x4E00;&#x4E2A;hook&#x51FD;&#x6570;&#x5728;&#x5904;&#x7406;&#x5B8C;&#x6570;&#x636E;&#x5305;&#x540E;&#xFF0C;&#x90FD;&#x5FC5;&#x987B;&#x5411;Netfilter&#x62A5;&#x544A;&#x5904;&#x7406;&#x7ED3;&#x679C;&#x3002;&#x5982;&#x679C;&#x6570;&#x636E;&#x5305;&#x5728;&#x524D;&#x9762;&#x67D0;&#x4E2A;hook&#x51FD;&#x6570;&#x5904;&#x7406;&#x5B8C;&#x540E;&#xFF0C;&#x88AB;&#x6C38;&#x4E45;&#x6027;&#x7684;&#x501F;&#x8D70;&#x4E86;&#xFF0C;&#x8BE5;hook&#x51FD;&#x6570;&#x53C8;&#x6CA1;&#x6709;&#x5411;Netfilter&#x62A5;&#x544A;&#xFF0C;&#x90A3;&#x4E48;&#x540E;&#x9762;&#x7684;hook&#x51FD;&#x6570;&#x5C06;&#x4E0D;&#x77E5;&#x9053;&#x8BE5;&#x5982;&#x4F55;&#x5904;&#x7406;&#x3002;&#x6240;&#x6709;hook&#x51FD;&#x6570;&#x7684;&#x8FD4;&#x56DE;&#x503C;&#x5C06;&#x53EA;&#x80FD;&#x662F;&#x4EE5;&#x4E0B;&#x51E0;&#x4E2A;&#x4E4B;&#x4E00;&#xFF0C;&#x8FD9;&#x4E9B;&#x503C;&#x5B9A;&#x4E49;&#x5728;include/uapi/linux/netfilter.h&#x6587;&#x4EF6;&#x4E2D;&#xFF0C;&#x5982;&#x4E0B;&#x6240;&#x793A;&#xFF1A;</font><br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">****&#x6587;&#x4EF6;&#x8F93;&#x51FA;&#x622A;&#x65AD;</div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">9</span> <span class="comment">/* Responses from hook functions. */</span></div><div class="line"><span class="number">10</span> <span class="meta">#<span class="meta-keyword">define</span> NF_DROP 0      <span class="comment">//&#x4E22;&#x5F03;</span></span></div><div class="line"><span class="number">11</span> <span class="meta">#<span class="meta-keyword">define</span> NF_ACCEPT 1    <span class="comment">//&#x4FDD;&#x7559;</span></span></div><div class="line"><span class="number">12</span> <span class="meta">#<span class="meta-keyword">define</span> NF_STOLEN 2    <span class="comment">//&#x5FD8;&#x6389;&#xFF0C;&#x62A5;&#x6587;&#x4E0D;&#x518D;&#x5F80;&#x4E0A;&#x4F20;&#x9012;&#xFF0C;&#x533A;&#x522B;&#x4E8E;NF_DROP&#xFF0C;&#x5B83;&#x6CA1;&#x6709;&#x8C03;&#x7528;kfree_skb()&#x6765;&#x91CA;&#x653E;skb</span></span></div><div class="line"><span class="number">13</span> <span class="meta">#<span class="meta-keyword">define</span> NF_QUEUE 3     <span class="comment">//&#x63D2;&#x5165;&#x7528;&#x6237;&#x7A7A;&#x95F4;&#xFF08;&#x961F;&#x5217;&#x4E2D;&#xFF09;</span></span></div><div class="line"><span class="number">14</span> <span class="meta">#<span class="meta-keyword">define</span> NF_REPEAT 4    <span class="comment">//&#x518D;&#x6B21;&#x8C03;&#x7528;&#x672C;hook&#x51FD;&#x6570;</span></span></div><div class="line"><span class="number">15</span> <span class="meta">#<span class="meta-keyword">define</span> NF_STOP 5      <span class="comment">//&#x505C;&#x6B62;&#x540E;&#x9762;&#x7684;hook&#x51FD;&#x6570;&#x7684;&#x6267;&#x884C;&#xFF0C;&#x76F4;&#x63A5;&#x8FD4;&#x56DE;</span></span></div><div class="line"><span class="number">16</span> <span class="meta">#<span class="meta-keyword">define</span> NF_MAX_VERDICT NF_STOP</span></div><div class="line"><span class="number">17</span></div><div class="line">****&#x6587;&#x4EF6;&#x8F93;&#x51FA;&#x622A;&#x65AD;</div></pre></td></tr></table></figure></p>
+<p>&#x3000;&#x3000;<font color="#000000" size="3">&#x7531;&#x4E0A;&#x8FF0;&#x4EE3;&#x7801;&#x53EF;&#x77E5;&#xFF0C;&#x4E00;&#x5171;&#x5B9A;&#x4E49;&#x4E86;6&#x4E2A;&#x8FD4;&#x56DE;&#x503C;&#x3002;</font></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/12/19/Netfilter解读系列之一-简介/" data-id="ciww1v50a0000aoujglua4iuu" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Netfilter-Iptables-Linux/">Netfilter Iptables Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/12/19/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/小技术/">小技术</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/技巧总结/">技巧总结</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/日常技巧总结/">日常技巧总结</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/读书笔记/">读书笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Github-Pages/">Github_Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netfilter-Iptables-Linux/">Netfilter Iptables Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Oracle-11g-Ubuntu14-04-数据库安装/">Oracle_11g Ubuntu14.04 数据库安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python-第三版/">Python 第三版</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python-算法-高效率-Magnus-Lie-Hetland/">Python 算法 高效率 Magnus Lie Hetland</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Win7-X64-python27-pcapy/">Win7_X64 python27 pcapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wireshark-抓包-HTTP会话保存/">Wireshark 抓包 HTTP会话保存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/个人博客/">个人博客</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据挖掘，读书笔记，DataMine，JiaWei-Han/">数据挖掘，读书笔记，DataMine，JiaWei Han</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github-Pages/" style="font-size: 10px;">Github_Pages</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Netfilter-Iptables-Linux/" style="font-size: 10px;">Netfilter Iptables Linux</a> <a href="/tags/Oracle-11g-Ubuntu14-04-数据库安装/" style="font-size: 10px;">Oracle_11g Ubuntu14.04 数据库安装</a> <a href="/tags/Python-第三版/" style="font-size: 10px;">Python 第三版</a> <a href="/tags/Python-算法-高效率-Magnus-Lie-Hetland/" style="font-size: 10px;">Python 算法 高效率 Magnus Lie Hetland</a> <a href="/tags/Win7-X64-python27-pcapy/" style="font-size: 10px;">Win7_X64 python27 pcapy</a> <a href="/tags/Wireshark-抓包-HTTP会话保存/" style="font-size: 10px;">Wireshark 抓包 HTTP会话保存</a> <a href="/tags/个人博客/" style="font-size: 10px;">个人博客</a> <a href="/tags/数据挖掘，读书笔记，DataMine，JiaWei-Han/" style="font-size: 10px;">数据挖掘，读书笔记，DataMine，JiaWei Han</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/12/19/Netfilter解读系列之一-简介/">Netfilter解读系列之一：简介</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/19/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/15/Win7-X64下python27安装pcapy/">Win7_X64下python27安装pcapy</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/11/Python高效率技巧总结/">Python算法教程笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2016/11/18/Wireshark抓包提取图片（视频、音频、文件等）/">Wireshark抓包提取图片（视频、音频、文件等）</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Jineney<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
