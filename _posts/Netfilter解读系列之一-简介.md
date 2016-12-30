@@ -47,11 +47,12 @@ and the NAT subsystem together build the major parts of the framework.
 　　<font color=#000000 size=2>=============================================></font>
 　　<font color=#FF0000 size=2>　2.0.X　　　　　　　2.2.X　　　　　　　2.4.X</font>
 　　<font color=#000000 size=3>其核心思想有两点：</br>　　1.Hook function（钩子/回调函数）。</br>　　2.Hook point（挂载点）。</font>
+#### 1.2.1 HookPoint(挂载点)
 　　<font color=#000000 size=3>它提供的挂载点均处于数据包传输流程中的关键位置，众多挂载点让用户可以在不同的地方对这些数据包进行操作，从而实现强大的数据包处理功能。下面是这些挂载点的一个示意图1-1：</font>
 ![image](Netfilter解读系列之一-简介/挂载点示意图.png)
 <div align='center'>图1-1　　挂载点示意图</div>
 　　<font color=#FF0000 size=3>说明：本图参考自 http://blog.chinaunix.net/uid-23069658-id-3160506.html </br></font>
-　　<font color=#000000 size=3>由上图可知共有5个挂载点，它们在源代码(include/uapi/linux/netfilter_ipv4.h)中的定义如下：</font>
+　　<font color=#000000 size=3>由上图可知共有5个挂载点，其中IPV4的五个挂载点在源代码(include/uapi/linux/netfilter_ipv4.h)中的定义如下：</font>
 ```c
 
 Linux内核版本：3.10.0.327.36.3.el7.x86_64
@@ -75,9 +76,12 @@ Linux内核版本：3.10.0.327.36.3.el7.x86_64
 ****文件输出截断
 ```
 　　<font color=#FF0000 size=3>说明：不同发行版本，不同内核版本中对这5个挂载点的宏定义所使用的名称前缀（比如上面使用的是NF）会有所差异，但后缀基本都是相同的。</font>
-　　<font color=#000000 size=3>第54行中定义的宏“ NF_IP_NUMHOOKS”根据其名称推测为统计共定义了多少个挂载点（未证实，网上也未找到相关资料）。我们把图1-1中对应的HookPoint替换为上述宏定义，并在下方标注出其值，方便理解，如下图1-2所示：</font>
+　　<font color=#000000 size=3>内核对每个数据包的处理都会按照这五个Hook点的先后顺序来进行，即这些Hook点之间也是有先后顺序的，如下图1-2所示：</br></font>
+![image](Netfilter解读系列之一-简介/Hook点优先级示意图.png)
+<div align='center'>图1-2　　Hook点优先级顺序示意图</div>
+　　<font color=#000000 size=3>第54行中定义的宏“ NF_IP_NUMHOOKS”根据其名称推测为统计共定义了多少个挂载点（未证实，网上也未找到相关资料）。我们把图1-1中对应的HookPoint替换为上述宏定义，并在下方标注出其值，方便理解，如下图1-3所示：</font>
 ![image](Netfilter解读系列之一-简介/挂载点示意图2.png)
-<div align='center'>图1-2　　挂载点宏定义替换后示意图</div>
+<div align='center'>图1-3　　挂载点宏定义替换后示意图</div>
 　　<font color=#000000 size=3>通过在这些点上注册不同的函数（即hook函数），就可以实现对数据包的各种操作，满足我们不同的需求。每个hook点又可以注册多个hook函数，系统会按照这些hook函数的优先级顺序进行处理，而这些函数的优先级是跟他们所属的iptables表类型相关的，后面会详细说，这里先给出源代码中关于函数优先级的定义：</font>
 ```c
 55
@@ -101,7 +105,9 @@ Linux内核版本：3.10.0.327.36.3.el7.x86_64
 73
 ****文件输出截断
 ```
-
+　　<font color=#000000 size=3>Hook点和Hook函数的优先级整合起来如下图1-4所示：</br></font>
+![image](Netfilter解读系列之一-简介/hook点和hook函数优先级整合示意图.PNG)
+<div align='center'>图1-4　　Hook点及Hook函数优先级示意图</div>
 　　<font color=#000000 size=3>函数优先级的定义源代码在该发行版中紧接着HookPoint的代码，是一个枚举类型。既然同一个HP（HookPoint，下同）可以注册多个hook函数，并且这些hook函数的优先级并不相同，而系统要保证每一个hook函数都会被执行，那么就要求每一个hook函数在处理完数据包后，都必须向Netfilter报告处理结果。如果数据包在前面某个hook函数处理完后，被永久性的借走了，该hook函数又没有向Netfilter报告，那么后面的hook函数将不知道该如何处理。所有hook函数的返回值将只能是以下几个之一，这些值定义在include/uapi/linux/netfilter.h文件中，如下所示：</font>
 ```c
 ****文件输出截断
@@ -117,4 +123,11 @@ Linux内核版本：3.10.0.327.36.3.el7.x86_64
 17
 ****文件输出截断
 ```
-　　<font color=#000000 size=3>由上述代码可知，一共定义了6个返回值。</font>
+　　<font color=#000000 size=3>由上述代码可知，一共定义了6个返回值。OK，点到即止，稍后再进行详细的分析。下面说说Iptables和Netfilter的关系。</font>
+
+### 1.3 Netfilter与Iptables
+　　<font color=#000000 size=3>要理清二者的关系，先来看一张图，如下图1-5所示：</font>
+![image](Netfilter解读系列之一-简介/netfilter和iptables关系.png)
+<div align='center'>图1-5　　netfilter和iptables关系示意图</div>
+　　<font color=#FF0000 size=3>备注：上图中的分层对应关系只是为了便于理解，并不完全准确。</font>
+　　<font color=#000000 size=3>从上图中可以看到，Netfilter位于内核中，是不能直接操作的，而Iptables位于用户态，直接提供给用户使用。如果没有Iptables，我们要增删一些功能，就需要修改源代码，然后重新编译内核，自己的PC折腾下还好，生产环境下的服务器不大可能让你这么玩。关于Iptables会在后面详细介绍。</font>
