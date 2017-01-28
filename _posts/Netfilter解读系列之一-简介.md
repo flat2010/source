@@ -39,7 +39,8 @@ and the NAT subsystem together build the major parts of the framework.
 * Usage:
     ··· ···
 ```
-　　<font color=#000000 size=3><font color=#000000 size=3>以上内容摘自netfilter项目官方网站 http://www.netfilter.org/index.html </font>
+　　<font color=#000000 size=3><font color=#000000 size=3>以上内容摘自netfilter项目官方网站 http://www.netfilter.org/index.html </font>  
+  
 ### 1.2 中文概述
 　　<font color=#000000 size=3>从上面1.1的叙述中可以了解到，Netfilter是Linux上（≥2.4.X）继ipfwadm、ipchains之后的一个框架（防火墙）。三者在时间线上的关系为：</font>
 　　<font color=#0000FF size=2>ipfwadm　　　　　　ipchains　　　　　　netfilter</font>
@@ -123,11 +124,12 @@ Linux内核版本：3.10.0.327.36.3.el7.x86_64
 17
 ****文件输出截断
 ```
-　　<font color=#000000 size=3>由上述代码可知，一共定义了6个返回值。OK，点到即止，稍后再进行详细的分析。下面说说Iptables和Netfilter的关系。</font>
+　　<font color=#000000 size=3>由上述代码可知，一共定义了6个返回值。OK，点到即止，稍后再进行详细的分析。下面说说Iptables和Netfilter的关系。</font>  
 
-### 1.3 Netfilter与Iptables
-　　<font color=#000000 size=3>要理清二者的关系，先来看一张图，如下图1-5所示：</font>
+<h3>1.3 Netfilter与Iptables</h3>
+&emsp;&emsp;<font color=#000000 size=3>要理清二者的关系，先来看一张图，如下图1-5所示：</font>
 ![image](Netfilter解读系列之一-简介/netfilter和iptables关系.png)
-<div align='center'>图1-5　　netfilter和iptables关系示意图</div>
-　　<font color=#FF0000 size=3>备注：上图中的分层对应关系只是为了便于理解，并不完全准确。</font>
+<div align='center'>图1-5　　netfilter和iptables关系示意图</div>  
+
+　　<font color=#FF0000 size=3>备注：上图中的分层对应关系只是为了便于理解，并不完全准确。</font>    
 　　<font color=#000000 size=3>从上图中可以看到，Netfilter位于内核中，是不能直接操作的，而Iptables位于用户态，直接提供给用户使用。如果没有Iptables，我们要增删一些功能，就需要修改源代码，然后重新编译内核，自己的PC折腾下还好，生产环境下的服务器不大可能让你这么玩。关于Iptables会在后面详细介绍。</font>
