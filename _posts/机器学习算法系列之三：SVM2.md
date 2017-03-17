@@ -69,3 +69,13 @@ comments: true
 &emsp;&emsp;同时，好的超平面还应该满足：  
 &emsp;&emsp;**②使得尽可能多的数据点被正确分类！**  
 &emsp;&emsp;由此，我们引出一个新的概念——<font color=#FF0000 size=3>`functional margin`（函数间隔）</font>。
+
+#### 2.2.1 点到平面距离
+&emsp;&emsp;高中时候我们学过关于给定点**(x<sub>0</sub>,y<sub>0</sub>,z<sub>0</sub>)**到平面**`Ax+By+Cz=0`**的距离公式如下图2-3所示：  
+![image](机器学习算法系列之三：SVM2/点到平面的距离1.png)
+<div align='center'>图2-3　　点到平面的距离公式</div> 
+
+&emsp;&emsp;如果以向量方式来表示（记平面方程法向量为**`w=(A,B,C)`**，点坐标**x=(x<sub>0</sub>,y<sub>0</sub>,z<sub>0</sub>)**，**b=D**），则有如下图2-4所示公式：
+
+![image](机器学习算法系列之三：SVM2/点到平面的距离2.png)
+<div align='center'>图2-4　　向量形式点到平面的距离</div> 
