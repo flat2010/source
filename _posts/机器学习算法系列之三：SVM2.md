@@ -2,11 +2,11 @@
 title: 机器学习算法系列之三：SVM（2）
 date: 2017-02-17 01:41:34
 tags: 机器学习 算法 SVM 支持向量机
-categories: 机器学习 
-comments: true 
+categories: [机器学习,  支持向量机] 
+comments: true
+toc: true
 ---
-
-![image](机器学习算法系列之三：SVM2/SVM2首图.PNG)
+<img src="机器学习算法系列之三：SVM2/SVM2首图.PNG" width="500" height="800" />
 ><font color=#0000FF face="微软雅黑" size=4>Hyper plane!</font>
 ***   
 
@@ -63,12 +63,12 @@ comments: true
 
 &emsp;&emsp;上图中星星和圆点为不同类型的数据点，要在图中找出能把这两类点区分开的直线的话，是非常容易的。比如图中的红色、蓝色、浅绿色线都可以满足要求，显然这样的线是在上图中我们是可以画无的，也就是对于上图的数据，有无数个满足要求的临界条件。  
 &emsp;&emsp;那么问题就来了，学挖掘机究竟哪家强？（哪个临界条件才是最好的^--^）  
-### 2.2 函数间隔
+### 2.2 几何、函数间隔
 &emsp;&emsp;从上图2-2可以看出来，离分割面/线越远的点，它属于某个类的确定性越高，离分割面/线越近，就越靠近临界值，其确定性就越低。对位于分割面/线上的点，其不确定性是最大的。因此，最好的超平面应该满足：  
 &emsp;&emsp;**①所有（两侧）距离超平面面最近的点到该超平面的距离之和有最大值！**  
 &emsp;&emsp;同时，好的超平面还应该满足：  
 &emsp;&emsp;**②使得尽可能多的数据点被正确分类！**  
-&emsp;&emsp;由此，我们引出一个新的概念——<font color=#FF0000 size=3>`functional margin`（函数间隔）</font>。
+&emsp;&emsp;由此，我们引出一个新的概念——<font color=#FF0000 size=3>`geometrical margin`（几何间隔）</font>。
 
 #### 2.2.1 点到平面距离
 &emsp;&emsp;高中时候我们学过关于给定点**(x<sub>0</sub>,y<sub>0</sub>,z<sub>0</sub>)**到平面**`Ax+By+Cz=0`**的距离公式如下图2-3所示：  
@@ -79,3 +79,35 @@ comments: true
 
 ![image](机器学习算法系列之三：SVM2/点到平面的距离2.png)
 <div align='center'>图2-4　　向量形式点到平面的距离</div> 
+
+#### 2.2.2 几何间隔
+&emsp;&emsp;由上述点到平面距离我们分别定义样本点关于超平面的几何间隔、数据集关于超平面的几何间隔分别为：
+<font color=#0000CC>
+$$
+\gamma_i = y_i·\frac{\vec w·\vec x_i + b}{||\vec w||}
+= y_i\lgroup\frac{\vec w}{||\vec w||}·\vec x_i + \frac{b}{||\vec w||}\rgroup
+\tag{2 - 1}
+$$
+</font>
+<font color=#CC0033>
+$$
+\gamma = \min \limits_{i=1,···,N} \gamma_i
+\tag{2 - 2}
+$$
+</font>
+&emsp;&emsp;注意式子2-1、2-2中的几何间隔没有像点到平面的距离那样取绝对值，而是可正可负。对于给定的数据集，其几何间隔等于所有样本点到超平面的距离的最小值。且当样本被正确分类时，不管是哪一类样本，都有$\gamma_i \ge 0$（因样本实际类别$y_i$和预测类别$\vec w·\vec x_i + b$同号）。
+&emsp;&emsp;对二分类问题，如果我们记样本实际类别$y_i$分别取+1（正类）、-1（负类），由式2-1可知，**`几何间隔`**的**几何意义就是区分正向和反向的点到平面的距离。**
+
+#### 2.2.3 函数间隔
+&emsp;&emsp;要理解SVM，有几何间隔就足够了，函数间隔没必要再讲，并且其几何意义远不如几何间隔明晰。但是为了确保整个理论体系的完整性，我们这里还是要介绍下函数间隔的概念及定义式（实际上很多教材和网上的资料都是先讲函数间隔，再引申出几何间隔）。
+&emsp;&emsp;**函数间隔实际上是在几何间隔的基础上，扩大了超平面法向量模大小（$||\vec w||$）倍数之后的距离，即：**
+
+$$
+\hat{\gamma_i} = ||\vec w||·\gamma_i = y_i\lgroup\vec w·x_i + b\rgroup
+\tag{2 - 3}
+$$
+
+$$\hat{\gamma} = 
+\min \limits_{i=1,···,N} \hat{\gamma_i}
+\tag{2 - 4}
+$$

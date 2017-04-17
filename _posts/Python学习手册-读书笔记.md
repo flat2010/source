@@ -2,7 +2,7 @@
 title: Python学习手册（第三版）--读书笔记  
 date: 2016-11-13 02:29:52  
 tags: [Python 第三版]  
-categories: 读书笔记  
+categories: [读书笔记, Python学习手册]  
 comments: true  
 ---
 

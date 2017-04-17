@@ -2,7 +2,7 @@
 title: Git+Github+Hexo在Win7_X64上搭建个人博客
 date: 2016-11-06 21:59:06
 tags: [Hexo, Git, Github_Pages, 个人博客]
-categories: 小技术
+categories: [安装配置教程, 个人博客安装]
 ---
 > 时光易逝，记忆也不会永恒。
 
