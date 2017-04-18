@@ -40,6 +40,8 @@ and the NAT subsystem together build the major parts of the framework.
     ··· ···
 ```
 　　<font color=#000000 size=3><font color=#000000 size=3>以上内容摘自netfilter项目官方网站 http://www.netfilter.org/index.html </font>  
+<!-- more -->
+  
   
 ### 1.2 中文概述
 　　<font color=#000000 size=3>从上面1.1的叙述中可以了解到，Netfilter是Linux上（≥2.4.X）继ipfwadm、ipchains之后的一个框架（防火墙）。三者在时间线上的关系为：</font>

@@ -28,6 +28,8 @@ comments: true
 　　①Set是无序无重复元素的集合;
 　　②List则是有序可包含重复元素的集合。
 　　在处理的数据量不大的时候，当然是哪个顺手用哪个。然而两者的不同实现决定了二者在性能上的差异，看如下代码：
+<!-- more -->
+
 ```python
 from timeit import timeit
 from random import randrange

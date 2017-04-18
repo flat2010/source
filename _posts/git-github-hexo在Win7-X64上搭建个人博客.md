@@ -15,6 +15,7 @@ categories: [安装配置教程, 个人博客安装]
 	　　②本地文件容易丢失，并且不能异地编辑。  
 	　　在参考一些网上教程后，也完成了自己博客的搭建，开启了新的装逼之旅。闲话少许，下面直接上图。
 ![image](git-github-hexo在Win7-X64上搭建个人博客/个人博客github主页.PNG)
+<!-- more -->
 
 ##### 1.2 前期准备
     　　软件：git、github、hexo、Node.js
