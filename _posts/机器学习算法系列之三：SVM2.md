@@ -100,7 +100,7 @@ $$
 &emsp;&emsp;对二分类问题，如果我们记样本实际类别$y_i$分别取+1（正类）、-1（负类），由式2-1可知，**`几何间隔`**的**几何意义就是区分正向和反向的点到平面的距离。**
 
 #### 2.2.3 函数间隔
-&emsp;&emsp;要理解SVM，有几何间隔就足够了，函数间隔没必要再讲，并且其几何意义远不如几何间隔明晰。但是为了确保整个理论体系的完整性，我们这里还是要介绍下函数间隔的概念及定义式（实际上很多教材和网上的资料都是先讲函数间隔，再引申出几何间隔）。
+&emsp;&emsp;要概略的理解SVM，有几何间隔就足够了，函数间隔没必要再讲，并且其几何意义远不如几何间隔明晰。但是如果要想理解它的整个推导过程，确保对整个理论体系建立一个完整的框架，还要了解函数间隔的概念及定义式（实际上很多教材和网上的资料都是先讲函数间隔，再引申出几何间隔）。
 &emsp;&emsp;**函数间隔实际上是在几何间隔的基础上，扩大了超平面法向量模大小（$||\vec w||$）倍数之后的距离，即：**
 
 $$
@@ -112,3 +112,153 @@ $$\hat{\gamma} =
 \min \limits_{i=1,···,N} \hat{\gamma_i}
 \tag{2 - 4}
 $$
+
+#### 2.2.4 相互关系
+&emsp;&emsp;几何间隔和函数间隔之间的关系式为：
+
+$$
+\begin{split}
+几何间隔 &= \frac{函数间隔}{超平面法向量模} \\\\
+函数间隔 &=几何间隔·超平面法向量模 \\\\
+第i个样本的几何间隔 &= \frac{第i个样本的函数间隔}{超平面法向量模}
+\end{split}
+$$
+
+$$\gamma_i = \frac{\hat{\gamma_i}}{||w||}
+\tag{2 - 5}
+$$
+
+$$\gamma = \frac{\hat{\gamma}}{||w||}
+\tag{2 - 6}
+$$
+
+$$\hat{\gamma} = \gamma·||w||
+\tag{2 - 7}
+$$
+
+### 2.3 间隔最大化
+&emsp;&emsp;由上述几何（函数）间隔的定义可知，间隔越大则表示样本中离超平面最近的点到超平面的距离也越大，被划分为对应类的确信程度也越高，如下图所示：
+<img src="机器学习算法系列之三：SVM2/间隔最大化示意图.PNG" width="350" height="700" />
+<div align='center'>图2-5　　间隔最大化示意图</div> 
+#### 2.3.1 硬间隔最大化
+&emsp;&emsp;对线性可分数据集，其几何间隔最大的超平面是**唯一存在（第三篇会证明）**的，对这样的间隔取最大化称为**硬间隔最大化**，当数据集为**近似线性可分**时的间隔最大化称为**软间隔最大化**，这个后面会讲。
+&emsp;&emsp;由硬间隔最大化的定义有表达式：    
+
+$$
+\max \limits\_{w,b}\ \ \gamma = \max \limits\_{w,b}\(\min \limits\_{i=1,···,N} \gamma_i)
+\tag{2 - 8}
+$$
+&emsp;&emsp;再由函数间隔和几何间隔的关系有：
+
+$$
+\max \limits\_{w,b}\ \ \gamma = \max \limits\_{w,b}\ \ \frac{\hat{\gamma}}{||w||}
+\tag{2 - 9}
+$$
+
+&emsp;&emsp;同时，还应满足如下约束条件（任意点到超平面的距离都不小于几何间隔）：
+
+$$
+y_i\lgroup\frac{\vec w}{||w||}·\vec x_i + \frac{b}{||w||}\rgroup\geq\gamma, \ \ i = 1,2,···,N
+\tag{2 - 10}
+$$
+
+&emsp;&emsp;由上可知，硬间隔最大化问题实际上是关于自变量$w、b、x_i$的最优化求解问题，但是样本$x_i$不应作为优化参数存在，因此最终只剩下$w、b$作为优化问题的自变量，即在满足**式2-10**的约束条件的情况下，求出下面函数极值条件对应的$w、b$：    
+
+$$
+\begin{split}
+\gamma\_{max} &= \max \limits\_{} \lbrace\ {f(w, b)}\ \rbrace \\\\
+& = \max \limits\_{w,b}{\frac{\hat{\gamma}}{||w||}} \\\\
+& = \max \limits\_{w, b}{\lbrace\min \limits\_{i=1,···,N}  \ \ {y_i\lgroup\frac{\vec w}{||w||}·\vec x_i + \frac{b}{||w||}\rgroup}}\rbrace
+\end{split}
+\tag{2 - 11}
+$$
+
+#### 2.3.2 最优化问题
+&emsp;&emsp;大多数教材或者资料在讲到最大化间隔的时候，会直接甩出一个结论：
+&emsp;&emsp;**取函数间隔 $\hat{\gamma} = 1$ 既不会影响目标函数最优化问题的求解，还能大大简化问题的分析。**于是原最优化问题等价为求：
+
+$$\begin{cases}
+\max \limits\_{w,b}{\frac{1}{||w||}}\\\\
+y_i \lgroup {\vec w} · \vec x_i + {b} \rgroup \geq \hat{\gamma}, \ \ i = 1,2,···,N
+\end{cases}
+\tag{2 - 12}
+$$
+
+&emsp;&emsp;至于为什么这样做不会影响最优化结果，几乎所有资料和教材都只是说不会改变几何间隔，也不会改变式2-10的不等式约束，但没有进行证明。要证明对参数的这种改变不会影响训练结果，我们只需要证明将函数间隔$\hat{\gamma}$调整为1时，以下两点成立即可：    
+&emsp;&emsp;**1. 最大硬间隔（几何间隔）的值$\gamma$不会发生改变；**
+&emsp;&emsp;**2. 最优化问题的约束条件未发生改变；**
+&emsp;&emsp;对第一点，假定将$\vec w、b$同时扩大$\lambda（\lambda > 0）$倍，则几何间隔变为：
+
+$$
+\begin{split}
+\max \limits\_{\lambda \vec w \ , \ \lambda · b}{\gamma} &= 
+\max \limits\_{\lambda \vec w \ , \ \lambda · b}{\frac{\hat{\gamma}}{||\lambda · w||}} \\\\
+&= \max \limits\_{\lambda \vec w \ , \ \lambda · b}{\frac{\min \limits\_{\lambda \vec w \ , \ \lambda · b}{y_i (\lambda \vec w x\_i + \lambda · b)}}{||\lambda · w||}} \\\\
+&= \max \limits\_{\lambda \vec w \ , \ \lambda · b}{\frac{\lambda \min \limits\_{\lambda \vec w \ , \  \lambda · b}{y_i (\vec w x\_i + b)}}{\lambda ||w||}} \\\\
+& = \max \limits\_{\lambda \vec w \ , \ \lambda · b}{\frac{\min \limits\_{\lambda \vec w \ , \  \lambda · b}{y_i (\vec w x\_i + b)}}{||w||}} \\\\
+& = \max \limits\_{\vec w \ , \ b}{\frac{\min \limits\_{\vec w \ , \  b}{y_i (\vec w x\_i + b)}}{||w||}} \\\\
+& = \max \limits\_{\vec w \ , \ b}{\gamma}
+\end{split}
+$$
+
+&emsp;&emsp;第一条得证！对于第二条，其实在证明第一条的时候已经包含了，这里还是单独写出来吧，方便阅读，权重向量$\vec w$和常数$b$调整后，对训练数据集中的任意样本$(x_i , y_i)$，有：
+
+$$
+\begin{split}
+y_i \lgroup \frac{\lambda \vec w}{||\lambda w||} · \vec x_i + \frac{\lambda · b}{||\lambda w||} \rgroup &= 
+y_i \lgroup \frac{\lambda \vec w}{\lambda ||w||} · \vec x_i + \frac{\lambda · b}{\lambda ||w||} \rgroup \\\\
+& = y_i \lgroup \frac{\vec w}{||w||} · \vec x_i + \frac{b}{||w||} \rgroup \\\\
+\end{split}
+$$
+&emsp;&emsp;**即调整后约束条件与原问题约束条件完全一致！**
+&emsp;&emsp;$\because$
+$$
+y_i \lgroup \frac{\vec w}{||w||} · \vec x_i + \frac{b}{||w||} \rgroup \geq \gamma
+\ 且 \ \hat{\gamma} = {\gamma} · ||w||
+$$
+&emsp;&emsp;$\therefore$
+$$
+y_i \lgroup {\vec w} · \vec x_i + {b} \rgroup \geq 
+\gamma · ||w|| = \hat{\gamma}
+$$
+
+&emsp;&emsp;第二条亦得证！<font color="red" size=3px>从几何上来理解，权重向量$\vec w$和常数$b$同时乘以系数$\lambda$，原分割超平面并没有改变（参见平面方程的几何意义），自然几何间隔也就没有改变（所有点到分割面的距离都没改变），但是函数间隔却扩大了$\lambda$倍。</font>
+&emsp;&emsp;有了上面的结论，考虑将$\vec w$、$b$同时扩大$\lambda =  \frac{1}{\hat{\gamma}}$倍，函数间隔变为：
+
+$$
+\begin{split}
+\hat{\gamma}' &=  y_i \lgroup {\lambda \vec w} · \vec x_i + {\lambda · b} \rgroup \\\\
+& = \lambda · y_i  · \lgroup {\vec w} · \vec x_i + {b} \rgroup \\\\
+& = \lambda · \hat{\gamma} \\\\
+& = \frac{1}{\hat{\gamma}} · \hat{\gamma} \\\\
+& = 1
+\end{split}
+$$
+
+&emsp;&emsp;即原最优化问题转换为与下式等价的优化问题：
+$$\begin{cases}
+\max \limits\_{w,b}{\frac{1}{||w||}}\\\\
+y_i \lgroup {\vec w} · \vec x_i + {b} \rgroup - 1  \geq 0, \ \ i = 1,2,···,N
+\end{cases}
+\tag{2 - 13}
+$$
+
+#### 2.2.4 线性可分最优化
+&emsp;&emsp;为了方便证明，还要做进一步的等价转换，考虑式2-12中的第一个求最大值表达式，它可以等价为求最小值问题即：
+
+$$
+\max \limits\_{w,b}{\frac{1}{||w||}} 
+\Longleftrightarrow
+\min \limits\_{w,b}{\frac{1}{2} {||w||}^2}
+$$
+
+&emsp;&emsp;将求最大值问题转换为求最小值问题是为了方便求导（分数的导数书写起来非常麻烦），求最小值问题的系数**$\frac{1}{2}$**则是为了在对权重向量$\vec w$求一阶导数时消除其导数前面的系数（归一化）。进而，原问题等价于如下的线性可分最优化问题：
+
+$$\begin{cases}
+\min \limits\_{w,b}{\frac{1}{2} {||w||}}^2\\\\
+y_i \lgroup {\vec w} · \vec x_i + {b} \rgroup - 1  \geq 0, \ \ i = 1,2,···,N
+\end{cases}
+\tag{2 - 14}
+$$
+
+&emsp;&emsp;这是一二**凸二次优化问题**，为了防止文章过长，本章就到此为止，下一章我们会证明线性可分数据集的超平面的存在性和唯一性。
