@@ -1,8 +1,8 @@
 ---
 title: Numpy数组解惑
 date: 2017-05-31 12:18:19
-tags: [Data Analysis with Python]  
-categories: [读书笔记, 利用python进行数据分析]  
+tags: [Numpy, Python] 
+categories: [读书笔记, 利用Python进行数据分析]  
 comments: true  
 toc: true
 ---
@@ -27,8 +27,8 @@ array([[1, 2, 3],
        [4, 5, 6],
        [7, 8, 9]])
 ```
-其轴0、1如下图所示：
-![image](利用python进行数据分析/numpy二维数组的轴.png "图形旋转示意图")
+&emsp;&emsp; 其轴0、1如下图所示：
+![image](Numpy数组解惑/numpy二维数组的轴.png "图形旋转示意图")
 <div align='center'>图1-1　　二维数组的轴示意图</div>
 &emsp;&emsp; 为了验证上述结论，我们通过代码对每个轴方向的数字进行求和计算，如下：
 ```python
@@ -59,7 +59,7 @@ arr = [[A, B],
        [C, D]]
 ```
 &emsp;&emsp;可以看出通过这种变换，我们就把原数组从形式上转化成了一个二维数组，但是一定要注意**这里的A、B、C、D均为一维数组，对它们进行操作时，要按照向量而非标量的运算法则进行。**降维后的轴方向如下图所示：
-![image](利用python进行数据分析/降维后轴方向示意图.png)
+![image](Numpy数组解惑/降维后轴方向示意图.png)
 <div align='center'>图1-2　　降维后轴方向示意图</div>
 &emsp;&emsp;此时对0、1轴方向求和有：
 ```python
@@ -75,9 +75,10 @@ array([[ 4,  6,  8, 10],
        [20, 22, 24, 26]])
 ```
 &emsp;&emsp;那么2轴方向呢？由于A、B、C、D均为一维数组，因此第三个周（轴2）即为最内层数组的行方向，如下图所示：
-![image](利用python进行数据分析/第三条轴即轴2.png)
+![image](Numpy数组解惑/第三条轴即轴2.png)
 <div align='center'>图1-3　　轴2方向示意图</div>
-&emsp;&emsp;所以对轴2方向的进行求和，实际上就是分别将A、B、C、D的元素求和，代码及结果如下：
+
+&emsp;&emsp;所以对轴2方向进行求和，实际上就是分别将A、B、C、D的元素求和**（对一维向量应用sum函数，计算的是该向量所有元素之和）**，代码及结果如下：
 ```python
 # sum(A) = [0 + 1 + 2 + 3] = [6]
 >>> arr.sum(axis=2)
@@ -136,10 +137,15 @@ arr2 = [[A, B],
         [G, H]]
 ```
 &emsp;&emsp; 降维后可知，对0、1轴求和的结果为：
-&emsp;&emsp; arr.sum(axis=0) = [A + C + E + G, B + D + F + H]
-&emsp;&emsp; arr.sum(axis=1) = [A + B, C + D, E + F, G + H]
+$$
+\begin{split}
+arr.sum(axis=0) &= \lbrack A + C + E + G \ , \ B + D + F + H \rbrack \\\\
+arr.sum(axis=1) &= \lbrack A + B \ , \ C + D \ , \ E + F \ , \ G + H \rbrack
+\end{split}
+$$
+
 &emsp;&emsp; 因为A~H均为二维数组，因此其求和受向量运算法则约束，即有：
-&emsp;&emsp; $$
+$$
 \begin{split}
 A + C + E + G &= \lbrack A_0 + C_0 + E_0 + G_0 \ , \ A_1 + C_1 + E_1 + G_1 \rbrack \\\\
 &= 
@@ -160,7 +166,7 @@ A + C + E + G &= \lbrack A_0 + C_0 + E_0 + G_0 \ , \ A_1 + C_1 + E_1 + G_1 \rbra
 \ , \
  {\lbrack 56 \ , \ 60 \rbrack}
 \rbrack
-\\\\同理可求得：\\\\
+\\\\同理可求得：\\\\ \\\\
 B + D + F + H &= 
 \lbrack 
 {\lbrack 64 \ , \ 68 \rbrack}
@@ -169,8 +175,9 @@ B + D + F + H &=
 \rbrack
 \end{split}
 $$
+
 &emsp;&emsp; 这与代码运行的结果完全一致，如下图所示：
-![image](利用python进行数据分析/四维数组0轴求和代码运行结果.png)
+![image](Numpy数组解惑/四维数组0轴求和代码运行结果.png)
 <div align='center'>图1-4　　四维数组0轴求和代码运行结果</div>
 &emsp;&emsp; 同理可求出1轴求和结果：
 ```python
@@ -254,7 +261,7 @@ arr.transpose((2, 0, 1))
 &emsp;&emsp; 以上述数组来说，变换后的结果是怎样的呢？按照网上资料的做法，可以分别计算出每个元素变换后的索引，然后就可以得到变换后的数组，比如对元素`6`，变换前其索引为`[0][1][2]`，变换后的索引则变成了`[2][0][1]`，数组小的时候，这样做还可以，当数组非常大的时候，一个个去计算就非常不明智了，并且容易算错。我们需要一种更为高效、准确的方法——轴推导法。
 &emsp;&emsp; **轴推导法**的思想主要有以下三步：
 &emsp;&emsp; 1. 定维度。根据变换前后各个轴轴向维度不变原理，可以确定变换后的数组形式；
-&emsp;&emsp; 2. 定内层。先确定最内层元素的形式及内容；
+&emsp;&emsp; 2. 定内层。先确定最内层元素的形式；
 &emsp;&emsp; 3. 递归。确定内层元素后，由内向外，逐层确定元素形式及内容。
 &emsp;&emsp;具体推导过程为：
 &emsp;&emsp;1. 定维度。变换前各个轴的维度（**注意：这里的维度是指各个轴方向元素的个数，与数组的维度有所区别。**）如下：
@@ -282,8 +289,50 @@ $$
 	    \lbrack \ \square \ , \ \square \rbrack \ ,  \ \lbrack \ \square \ , \ \square \rbrack \ 
 	\rbrack
 \huge
-\rbrack
+\ \rbrack
 \end{split}
 $$
 &emsp;&emsp;其中的$\square$代表原数组中的任意一个数字。
-&emsp;&emsp;2. 定内层。对于内层数组而言，其轴只有一个，**变换后的新数组的轴2（即最内层数组的行方向）是原来的数组的轴1（即最外层数组的列方向）**，
+&emsp;&emsp;2. 定内层。对于内层数组而言，是一个1 × 2的矩阵$\lbrack \ \square \ , \ \square  \ \rbrack$，**变换后的新数组的轴2（即最内层数组的行方向）是原来的数组的轴1（即最外层数组的列方向）**，原数组的列方向数字依次为$\stackrel{\longrightarrow}{0, 1, 2, 3}$，所以变换后最内层数组的行方向元素依次为：
+$$
+\lbrack \ \boxed{\color{red}0} \ , \  \boxed{\times} \ \rbrack \ , \  \lbrack \ \boxed{\times} \ , \ \boxed{\times} \ \rbrack \ \\\\
+\lbrack \ \\boxed{\color{red}1} \ , \  \boxed{\times} \ \rbrack \ , \  \lbrack \ \boxed{\times} \ , \ \boxed{\times} \ \rbrack \ \\\\
+\lbrack \ \boxed{\color{red}2} \ , \  \boxed{\times} \ \rbrack \ , \  \lbrack \ \boxed{\times} \ , \ \boxed{\times} \ \rbrack \ \\\\
+\lbrack \ \boxed{\color{red}3} \ , \  \boxed{\times} \ \rbrack \ , \  \lbrack \ \boxed{\times} \ , \ \boxed{\times} \ \rbrack \ \\\\
+$$
+&emsp;&emsp;3. 递归。内层数组首元素确定后，我们还需要根据外层数组的行列才能完全确定变换后的数组。上可知，变换后的数组的列方向是原数组的行方向，于是得到列首元素：
+$$
+\begin{split}
+& \lbrack \ \boxed{\color{red}0} \ , \  \boxed{\color{red}4} \ \rbrack \ , \  \lbrack \ \boxed{\color{red}8} \ , \ \boxed{\color{red}12} \ \rbrack \ \\\\
+& \lbrack \ \boxed{1} \ , \  \boxed{\times} \ \rbrack \ , \  \lbrack \ \boxed{\times} \ , \ \boxed{\times} \ \rbrack \ \\\\
+& \lbrack \ \boxed{2} \ , \  \boxed{\times} \ \rbrack \ , \  \lbrack \ \boxed{\times} \ , \ \boxed{\times} \ \rbrack \ \\\\
+& \lbrack \ \boxed{3} \ , \  \boxed{\times} \ \rbrack \ , \  \lbrack \ \boxed{\times} \ , \ \boxed{\times} \ \rbrack \ \\\\
+\end{split}
+$$
+&emsp;&emsp;<font color="red">注意：这里首行的列元素顺序为$\stackrel{\longrightarrow}{0, 4, 8, 12}$而不是$\stackrel{\longrightarrow}{0, 8, 4, 12}$，因为0、4才是属于不同行同列的元素。</font>
+&emsp;&emsp;再根据变换后数组的行方向是原数组的列方向，可以分别得到4、8、12下面的元素，最后结果为：
+$$
+\begin{split}
+& \lbrack \ \boxed{0} \ , \  \boxed{\color{red}4} \ \rbrack \ , \  \lbrack \ \boxed{\color{blue}8} \ , \ \boxed{\color{purple}{12}} \ \rbrack \ \\\\
+& \lbrack \ \boxed{1} \ , \  \boxed{\color{red}5} \ \rbrack \ , \  \lbrack \ \boxed{\color{blue}9} \ , \ \boxed{\color{purple}{13}} \ \rbrack \ \\\\
+& \lbrack \ \boxed{2} \ , \  \boxed{\color{red}6} \ \rbrack \ , \  \lbrack \ \boxed{\color{blue}{10}} \ , \ \boxed{\color{purple}{14}} \ \rbrack \ \\\\
+& \lbrack \ \boxed{3} \ , \  \boxed{\color{red}7} \ \rbrack \ , \  \lbrack \ \boxed{\color{blue}{11}} \ , \ \boxed{\color{purple}{15}} \ \rbrack \ \\\\
+\end{split}
+$$
+&emsp;&emsp;代码运行结果与我们的推导完全一致，如下：
+```python
+>>> arr.transpose(2,0,1)
+array([[[ 0,  4],
+        [ 8, 12]],
+
+       [[ 1,  5],
+        [ 9, 13]],
+
+       [[ 2,  6],
+        [10, 14]],
+
+       [[ 3,  7],
+        [11, 15]]])
+```
+###### 1.2.3 四维数组
+&emsp;&emsp; 四维数组的变换与三维数组类似，只是需要先确定最内层数组的行、列方向，在变换中一定要注意的是：**保持元素的对应关系（异行同列，异列同行）！如果不确定，可以使用元素索引来辅助分析。**比如，对三维数组中索引为$\lbrack 0 \rbrack \lbrack 0 \rbrack \lbrack x \rbrack$的元素，按轴序(1,2,0)变换后，索引变为$\lbrack 0 \rbrack \lbrack x \rbrack \lbrack 0 \rbrack$，也就是说原数组第一项的第一项中的元素变换后，是新数组的第一项的所有项的首元素。

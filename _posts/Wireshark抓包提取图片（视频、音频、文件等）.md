@@ -1,7 +1,7 @@
 ---
 title: Wireshark抓包提取图片（视频、音频、文件等）
 date: 2016-11-18 14:33:25
-tags: [Wireshark 抓包 HTTP会话保存]
+tags: [Wireshark, HTTP]
 categories: [日常技巧总结, Wireshark]
 comments: true
 ---

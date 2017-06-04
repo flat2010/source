@@ -1,7 +1,7 @@
 ---
 title: Python算法教程笔记
 date: 2016-12-11 21:46:05
-tags: [Python 算法 高效率 Magnus Lie Hetland]  
+tags: [Python, 算法]  
 categories: [编程笔记, Python]  
 comments: true  
 ---

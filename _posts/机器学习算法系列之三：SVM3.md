@@ -1,7 +1,7 @@
 ---
 title: 机器学习算法系列之三：SVM（3）
 date: 2017-04-30 14:44:26
-tags: 机器学习 算法 SVM 支持向量机
+tags: [机器学习, 算法, SVM, 支持向量机]
 categories: [机器学习,  支持向量机] 
 comments: true
 toc: true

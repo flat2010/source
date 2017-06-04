@@ -1,7 +1,7 @@
 ---
 title: Win7_X64下python27安装pcapy
 date: 2016-12-15 14:47:24
-tags: [Win7_X64 python27 pcapy]
+tags: [Python, Pcapy]
 categories: [安装配置教程, Python]
 comments: true
 ---
