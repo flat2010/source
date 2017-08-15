@@ -6,25 +6,28 @@ categories: [安装配置教程,  Docker应用]
 comments: true
 toc: true
 ---
-<img src="Docker上部署Hadoop等完全分布式集群/Docker首图.png" width="500" height="700" />
+<img src="Docker上部署Hadoop等完全分布式集群/Docker首图.png" width="300" height="300" />
+
 ><font color=#0000FF face="微软雅黑" size=4>I wish life is just like a docker app, when U screwed it up, U can just start it over and nothing happened.</font>
 ***   
 
 ## 一、Docker简介  
 ### 1. What is Docker?
-&emsp;&emsp;<font color=#000000 size=5>**什**</font>么是Docker？用一句话来表述就是：[$Docker \ is \ the \ world's \ leading \ software \ container \ platform$](https://www.docker.com/what-docker)，即Docker是一种软件容器平台。对于个人开发者来说，它允许你把你的应用程序和所需的环境一起打包，然后在其它任意一个同样支持Docker的环境下重新部署。比如你辛辛苦苦在某台电脑上开发的程序，拿到另一台上却跑不起来（缺少库、依赖等等之类的），使用Docker就不会有这样的问题了。Docker的作用可以简单粗暴的理解为ghost装机。来自Docker官方的这个图或许能给你些提示。
-
-<img src="Docker上部署Hadoop等完全分布式集群/Docker作用说明图.png" width="500" height="400" />
+&emsp;&emsp;<font color=#000000 size=5>**什**</font>么是[Docker？](https://www.docker.com/what-docker)用一句话来表述就是：<font color="blue">Docker is the world's leading software container platform</font>，即Docker是一种软件容器平台。对于个人开发者来说，它允许你把你的应用程序和所需的环境一起打包，然后在其它任意一个同样支持Docker的环境下重新部署。比如你辛辛苦苦在某台电脑上开发的程序，拿到另一台上却跑不起来（缺少库、依赖等等之类的），使用Docker就不会有这样的问题了。Docker的作用可以简单粗暴的理解为ghost装机。来自Docker官方的这个图或许能给你些提示。
+<div style="text-align:center"  >
+<img src="Docker上部署Hadoop等完全分布式集群/Docker作用说明图.png" width="400" height="400" />
 <div align='center'>图1-1　　What's Docker?</div> 
+</div>
 
 <!-- more -->
 &emsp;&emsp;当然，对于运营商（Operator）以及企业（Enterprise）用户来说，其功能远超想象，作为普通使用者的我们并不关心，在此也不过多介绍，感兴趣的可以查阅官方网站。
 ### 2. Why Docker?
 &emsp;&emsp;Docker的作用有点类似虚拟机软件如VMWare、Virtualbox等，这些产品功能已经十分强大了，那为何还要重复造轮子弄个虚拟化的软件？答案就在下面的传统虚拟机和Docker的架构对比图中：  
-
-<img src="Docker上部署Hadoop等完全分布式集群/Container diagram.png" width="400" height="400" />
+<div style="text-align:center"  >
+<img src="Docker上部署Hadoop等完全分布式集群/Container diagram.png" width="400" height="300" />
 <div align='center'>图1-2　　Docker架构图</div> 
-<img src="Docker上部署Hadoop等完全分布式集群/Virtual Machine diagram.png" width="400" height="400" />
+</div>
+<img src="Docker上部署Hadoop等完全分布式集群/Virtual Machine diagram.png" width="400" height="300" />
 <div align='center'>图1-3　　VM架构图</div> 
 
 &emsp;&emsp;从上面的架构可以看出，相比于传统的虚拟机软件，Docker底层复用程度更高，所有的App共用**一套OS**，应用之间则通过所谓的**Container**实现隔离（解耦），而传统的VM要实现App的隔离，只能通过新增一套OS（也即重新创建一个虚拟机）实现。
@@ -306,7 +309,7 @@ volumes:
         - /home/develop/hadoop_datas:/home/hadoop/hadoop_datas
         - /home/develop/spark_datas:/home/hadoop/spark_datas
 ```
-&emsp;&emsp;另外，Slave节点也映射了一个端口8081，这是为了方便查看Spark集群各个节点的信息，这里又存在一个问题，每个Container的8081都需要映射出来，但是宿主机只有一个8081端口，所以这些Container中只能有一个可以映射到原生的8081端口，剩下的只能改用其它端口。这里采取的是把8081留给slave1，剩下的slave2、slave3、slave4分别对应8071、8061、8051端口。即访问 http://slave1:8071 就相当于访问slave1的8081端口。
+&emsp;&emsp;另外，Slave节点也映射了一个端口8081，这是为了方便查看Spark集群各个节点的信息，这里又存在一个问题，每个Container的8081都需要映射出来，但是宿主机只有一个8081端口，所以这些Container中只能有一个可以映射到原生的8081端口，剩下的只能改用其它端口。这里采取的是把8081留给slave1，剩下的slave2、slave3、slave4分别对应8071、8061、8051端口。即访问 http://宿主机:8071 就相当于访问slave1的8081端口。
 
 #### 2.3.5 初始化环境
 &emsp;&emsp;进入**`autoscripts`**目录，执行脚本**`initial_spark_all.sh（安装了Spark集群）`**或者**`initial_hadoop_all.sh（安装了Hadoop集群）`**初始化Container的环境，这些脚本会先登录容器，然后执行容器里面的相应脚本，以**`initial_hadoop_all.sh`**代码来说，如下：
