@@ -5,21 +5,21 @@ tags: [Docker, Hadoop, Spark, 分布式]
 categories: [安装配置教程,  Docker应用] 
 comments: true
 toc: true
+mathjax: true
 ---
-<img src="Docker上部署Hadoop等完全分布式集群/Docker首图.png" width="300" height="300" />
+<img src="Docker上部署Hadoop等完全分布式集群/Docker首图.png" width="300" height="200" />
 
 ><font color=#0000FF face="微软雅黑" size=4>I wish life is just like a docker app, when U screwed it up, U can just start it over and nothing happened.</font>
-***   
 
 ## 一、Docker简介  
 ### 1. What is Docker?
 &emsp;&emsp;<font color=#000000 size=5>**什**</font>么是[Docker？](https://www.docker.com/what-docker)用一句话来表述就是：<font color="blue">Docker is the world's leading software container platform</font>，即Docker是一种软件容器平台。对于个人开发者来说，它允许你把你的应用程序和所需的环境一起打包，然后在其它任意一个同样支持Docker的环境下重新部署。比如你辛辛苦苦在某台电脑上开发的程序，拿到另一台上却跑不起来（缺少库、依赖等等之类的），使用Docker就不会有这样的问题了。Docker的作用可以简单粗暴的理解为ghost装机。来自Docker官方的这个图或许能给你些提示。
+<!-- more -->
 <div style="text-align:center"  >
-<img src="Docker上部署Hadoop等完全分布式集群/Docker作用说明图.png" width="400" height="400" />
+<img src="Docker上部署Hadoop等完全分布式集群/Docker作用说明图.png" width="400" height="300" />
 <div align='center'>图1-1　　What's Docker?</div> 
 </div>
 
-<!-- more -->
 &emsp;&emsp;当然，对于运营商（Operator）以及企业（Enterprise）用户来说，其功能远超想象，作为普通使用者的我们并不关心，在此也不过多介绍，感兴趣的可以查阅官方网站。
 ### 2. Why Docker?
 &emsp;&emsp;Docker的作用有点类似虚拟机软件如VMWare、Virtualbox等，这些产品功能已经十分强大了，那为何还要重复造轮子弄个虚拟化的软件？答案就在下面的传统虚拟机和Docker的架构对比图中：  
@@ -92,7 +92,7 @@ toc: true
 &emsp;&emsp;集群大小根据自己机器配置来，但是有一点务必要注意，规划集群的时候，集群数量（含master）最好是奇数，而不是偶数（因为Zookeeper的leader选举算法需要根据得票数来确定leader，偶数个节点很容易导致选票持平问题）。本教程集群规划如下表：
 
 | 容器名 | 主机名 | IP地址 | 节点类型 | 所属网络 |
-| :-------: | :-------:| :------: | :-------: | :-------: |
+| :-------: | :-------: | :------: | :-------: | :-------: |
 | spark-master | spark-master | 192.168.3.110 | Namenode | cluster/bridge |
 | spark-slave1 | spark-slave1 | 192.168.3.111 | Datanode | cluster/bridge |
 | spark-slave2 | spark-slave2 | 192.168.3.112 | Datanode | cluster/bridge |
@@ -102,11 +102,11 @@ toc: true
 
 #### 2.2.4 静态IP问题
 &emsp;&emsp;要用集群的话，肯定需要静态IP，并且需要指明hostname，需要在启动Container时指定Container的IP地址，以及hostanme。如果使用docker-compose的话，在yml文件中使用如下参数配置：
-```bash
+```YAML
 # 指定容器IP，隶属于名为cluster的网络
 networks:
-    cluster:
-       ipv4_address: 192.168.3.114
+  cluster:
+    ipv4_address: 192.168.3.114
 		  
 # 定义名为cluster的网络
 networks:
@@ -122,7 +122,7 @@ networks:
 #### 2.2.5 *部署文件说明
 &emsp;&emsp;**<font color="red">注意：如果是直接拷贝镜像或者配置文件去使用而不需要做修改的可以直接跳到安装部分</font>**。部署过程中所需要的文件，其存放目录及作用如下：
 ```bash
-# 目录树形图
+# 目录树图
 ../docker_hadoop
 ├── addfiles //yml配置文件中所有以ADD命令添加的文件，主要是一些软件的配置文件
 ├── autoscripts //一些自动化脚本，方便操作使用，包括集群环境配置，启动、停止等
@@ -286,33 +286,34 @@ CONTAINER ID        IMAGE                    COMMAND                  CREATED   
 ```
 &emsp;&emsp;上面的输出结果可以看出来，Master节点映射了许多端口出来，让我们即使在宿主机外面也能访问，关于端口映射（PORTS）和端口暴露（EXPOSE）的详细说明，参见后面章节。
 &emsp;&emsp;对于**`docker-compose.yml`**，需要说明的有几点，首先是在启动时用参数**`ports`**指定要映射出来的端口：
-```bash
+```YAML
 ports:
-        - "8042:8042"
-        - "19888:19888"
-        - "50070:50070"  //Hadoop集群的webui地址
-        - "8088:8088"  //Spark集群的webui地址
-        - "9000:9000"
-        - "9001:9001"
-        - "2181:2181"
-        - "16010:16010"  //HBase的webui地址
-        - "16301:16301"
-        - "16201:16201"
-        - "4040:4040"
-        - "8080:8080"
-        - "7077:7077"  //提交作业需要
-        - "18080:18080"
+   - "8042:8042"
+   - "19888:19888"
+   - "50070:50070"  //Hadoop集群的webui地址
+   - "8088:8088"  //Spark集群的webui地址
+   - "9000:9000"
+   - "9001:9001"
+   - "2181:2181"
+   - "16010:16010"  //HBase的webui地址
+   - "16301:16301"
+   - "16201:16201"
+   - "4040:4040"
+   - "8080:8080"
+   - "7077:7077"  //提交作业需要
+   - "18080:18080"
 ```
 &emsp;&emsp;其次，考虑灾备，我把一些关键数据（比如HDFS数据、HBase数据）存放在宿主机上而非Container中，这样即使包含集群的Container删除或者损毁了，集群数据并不会丢失，重新创建好集群后，还能使用之前的集群数据。通过**`volumes`**参数，可以在容器中指定要挂载的外部目录：
-```bash
+```YAML
 volumes:
-        - /home/develop/hadoop_datas:/home/hadoop/hadoop_datas
-        - /home/develop/spark_datas:/home/hadoop/spark_datas
+   - /home/develop/hadoop_datas:/home/hadoop/hadoop_datas
+   - /home/develop/spark_datas:/home/hadoop/spark_datas
 ```
 &emsp;&emsp;另外，Slave节点也映射了一个端口8081，这是为了方便查看Spark集群各个节点的信息，这里又存在一个问题，每个Container的8081都需要映射出来，但是宿主机只有一个8081端口，所以这些Container中只能有一个可以映射到原生的8081端口，剩下的只能改用其它端口。这里采取的是把8081留给slave1，剩下的slave2、slave3、slave4分别对应8071、8061、8051端口。即访问 http://宿主机:8071 就相当于访问slave1的8081端口。
 
 #### 2.3.5 初始化环境
 &emsp;&emsp;进入**`autoscripts`**目录，执行脚本**`initial_spark_all.sh（安装了Spark集群）`**或者**`initial_hadoop_all.sh（安装了Hadoop集群）`**初始化Container的环境，这些脚本会先登录容器，然后执行容器里面的相应脚本，以**`initial_hadoop_all.sh`**代码来说，如下：
+
 ```bash
 #!/bin/bash
 # format namenode of hadoop
@@ -324,6 +325,7 @@ docker exec `sudo docker ps | grep "flat2010:hadoop-master" | awk '{print $1}'` 
 # initial zookeeper
 docker exec `sudo docker ps | grep "flat2010:hadoop-master" | awk '{print $1}'` bash -c "source /home/hadoop/initial_zookeeper.sh"
 ```
+
 &emsp;&emsp;代码先是查找镜像名为**`flat2010:hadoop-master`**的Container，获取Container ID，然后使用**`exec`**命令进入该容器，执行容器中的**`format_hadoop.sh`**、**`setenv_hadoop.sh`**、**`initial_zookeeper.sh`**脚本，执行完成后，会自动退出容器（但不会停止或销毁），完成环境初始化配置。
 &emsp;&emsp;**注意执行format_hadoop.sh脚本会格式化Namenode，所以一般是在第一次安装好Hadoop后尚未启动前调用上面两个initial_xxx脚本**。
 &emsp;&emsp;此外，第一行进入容器的代码之所以要加入参数**`-ti`**，是因为如果不以这种交互方式执行，格式化Namenode提示输入**`YES/NO?`**时，容器将无法获取你的输入，从而一直卡在那个提示界面。
@@ -335,13 +337,13 @@ docker exec `sudo docker ps | grep "flat2010:hadoop-master" | awk '{print $1}'` 
 #!/bin/bash
 # start hadoop first
 ./start_hadoop.sh
-
+	
 # start zookeeper
 ./start_zookeeper.sh
-
+	
 # start hbase 
 ./start_hbase.sh
-
+	
 # start spark
 ./start_spark.sh
 ```
@@ -395,17 +397,18 @@ Mode: follower
 &emsp;&emsp;为了方便集群、Docker容器的管理，编写了一些批量自动化操作脚本，这些脚本都位于**`autoscripts`**目录下。脚本功能参见前面的**2.2节部署说明**。
 #### 2.4.1 停止集群
 &emsp;&emsp;进入**`autoscripts`**目录，执行脚本**`stop_all_in_order.sh`**来启动集群，它会按照特定顺序（HBase ->Zookeeper -> Spark -> Hadoop）来确保集群正确的被关闭。其代码如下：
+
 ```bash
 #!/bin/bash
 # stop hbase 
 ./stop_hbase.sh
-
+    
 # start zookeeper
 ./stop_zookeeper.sh
-
+    
 # stop spark 
 ./stop_spark.sh
-
+    	
 # stop hadoop at last 
 ./stop_hadoop.sh
 ```
@@ -546,4 +549,5 @@ $ sudo pip install docker-compose
  - http://www.cnblogs.com/luogankun/p/3981645.html Spark History安装配置
  - http://blog.csdn.net/surp2011/article/details/53191570 Spark History安装配置
  - http://stark-summer.iteye.com/blog/2218995 Spark History安装配置
+
  - https://docs.docker.com/ Docker官方文档网站
