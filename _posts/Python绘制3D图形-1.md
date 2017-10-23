@@ -6,12 +6,11 @@ categories: [编程笔记,  Python]
 comments: true
 toc: true
 ---
-<img src="Python绘制3D图形-1/首图.png" width="500" height="800" />
-><font color=#0000FF face="微软雅黑" size=4>Just make it easier, easier to understand and beautiful！</font>
-***   
+<img src="Python绘制3D图形-1/首图.png" width="350" height="250" />
+><font color=#0000FF face="微软雅黑" size=4>Just make it easier, easier to understand and beautiful！</font> 
 
 ## 一、基础篇  
-&emsp;&emsp; <font color=#000000 size=5>**Python**</font>绘图包括了2D和3D，不同的类型使用的库不同，本系列主要讲3D图形的绘制。包括3D曲面图、3D散点图以及在3D曲面图上绘制有向、无向线。
+&emsp;&emsp; <font color=#000000 size=5>**P**</font>ython绘图包括了2D和3D，不同的类型使用的库不同，本系列主要讲3D图形的绘制。包括3D曲面图、3D散点图以及在3D曲面图上绘制有向、无向线。
 <!-- more -->
 ### 1.1 环境说明  
 &emsp;&emsp;本文中软件运行环境如下：

@@ -6,7 +6,7 @@ categories: [机器学习,  支持向量机]
 comments: true
 toc: true
 ---
-<img src="机器学习算法系列之三：SVM2/SVM2首图.PNG" width="500" height="800" />
+<img src="机器学习算法系列之三：SVM2/SVM2首图.PNG" width="350" height="250" />
 ><font color=#0000FF face="微软雅黑" size=4>Hyper plane!</font>
 ***   
 
@@ -138,7 +138,7 @@ $$
 
 ### 2.3 间隔最大化
 &emsp;&emsp;由上述几何（函数）间隔的定义可知，间隔越大则表示样本中离超平面最近的点到超平面的距离也越大，被划分为对应类的确信程度也越高，如下图所示：
-<img src="机器学习算法系列之三：SVM2/间隔最大化示意图.PNG" width="350" height="700" />
+<img src="机器学习算法系列之三：SVM2/间隔最大化示意图.PNG" width="500" height="400" />
 <div align='center'>图2-5　　间隔最大化示意图</div> 
 
 #### 2.3.1 硬间隔最大化
@@ -288,7 +288,7 @@ $$
 
 &emsp;&emsp;其几何意义为函数任意两点连线上的值均大于对应自变量处的值，图示如下：
 
-<img src="机器学习算法系列之三：SVM2/凸函数示意图.png" width="350" height="700" />
+<img src="机器学习算法系列之三：SVM2/凸函数示意图.png" width="350" height="250" />
 <div align='center'>图2-6　　凸函数示意图</div> 
 
 #### 2.4.3 仿射函数

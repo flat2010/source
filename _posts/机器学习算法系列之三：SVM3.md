@@ -6,7 +6,7 @@ categories: [机器学习,  支持向量机]
 comments: true
 toc: true
 ---
-<img src="机器学习算法系列之三：SVM3/SVM3首图.png" width="500" height="800" />
+<img src="机器学习算法系列之三：SVM3/SVM3首图.png" width="350" height="250" />
 ><font color=#0000FF face="微软雅黑" size=4>The road to dreams is not only lonely, but also rugged！</font>
 ***   
 
@@ -27,8 +27,8 @@ $$
 
 ### 1.2 缓冲带
 &emsp;&emsp;请注意，缓冲带这个词并非术语，是我根据它的作用起的一个名字，方便大家理解它的功能。它的专业术语称作**margin**，是由过支持向量并与分割超平面平行的两个平面所围起来的部分，由于支持向量到分割超平面的距离均为1，所以**分割超平面位与这两个平面的中间位置**，如下图所示：
-![image](机器学习算法系列之三：SVM3/缓冲区等示意图.PNG)
-<div align='center'>图1-1　　缓冲区、支持向量等示意图</div> 
+<img src="机器学习算法系列之三：SVM3/缓冲区等示意图.PNG" width="600" height="500" />
+<div align='center' >图1-1　　缓冲区、支持向量等示意图</div> 
 
 &emsp;&emsp;如图上所示，L1、L2上的点就是**支持向量**，黄色粗直线为分割超平面（由$\vec w、b$决定），L1、L2之间的距离就是**margin = $\frac{2}{||w||}$**，L1、L2之间的区域即为缓冲带（缓冲区），L1、L2到分割超平面的距离均为**几何距离 = $\frac{1}{||w||}$**。
 &emsp;&emsp;之所以把L1和L2之间的区域称为缓冲带，是因为任意一边的样本点发生抖动时，都不会立即越过分割超平面被误判为另一种类型的样本，这个安全距离就是$\frac{1}{||w||}$，缓冲带的存在确保了SVM的泛化能力和抗噪能力。

@@ -58,7 +58,7 @@ al\temp\pip-umphoh-record\install-record.txt --single-version-externally-managed
 --compile" failed with error code 1 in c:\users\dev\appdata\local\temp\pip-buil
 d-lsboh1\pcapy\
 ```
-　　网上给的意见是设置VS90COMNTOOLS这个环境变量即可，但是在我电脑上设置后，再次执行，错误依旧，原因未知，懒得理了，反正有暴力方法解决→_→。
+　　网上给的意见是设置VS90COMNTOOLS这个环境变量即可，但是在我电脑上设置后，再次执行，错误依旧，原因未知，懒得理了，反正有暴力方法解决→\_→。
 　　然后就直接上 http://blog.csdn.net/secretx/article/details/17472107 给出的暴力解决方法，先贴出网上搜的比较多的设置环境变量的方法：
 ```bash
 C:\Users\dev>SET VS90COMNTOOLS=%VS100COMNTOOLS%      ----VS2010版
@@ -72,8 +72,10 @@ C:\Users\dev>SET VS90COMNTOOLS=%VS110COMNTOOLS%      ----VS2012版
 C:\Users\dev>SET VS90COMNTOOLS=%VS120COMNTOOLS%      ----VS2013版
 ```
 　　这是比较讲道理的做法，但是有时候电脑它不跟你讲道理啊。那么这时候可以直接去配置你的系统环境变量VS90COMNTOOLS，如下图2-1所示（同时，需要根据你VS版本配置）：
+  
 ![image](Win7_X64下python27安装pcapy/设置环境变量.png)
 <div align='center'>图2-1  直接配置环境变量VS90COMNTOOLS</div>
+
 　　如果没有这个环境变量，需要新建一个（我当时就是没有注意，直接改的VS100COMNTOOLS这个环境变量，结果发现怎么改都不对，然后采用了第二种暴力方法解决了囧）。
 　　如果执行了上述操作都还不生效（如果你不幸遇到了这种情况果断放弃吧，用Linux装，RP问题不解释。)，可以直接在python代码里面改，在C:\Python27\Lib\distutils找到文件msvc9compiler.py，下拉到第<font color=#FF0000 size=4> 243 </font>行（不同版本可能会有差异，可以直接搜），找到：
 ```python
@@ -108,8 +110,10 @@ d-6yfc8p\pcapy\
 ```
 　　按照网上说法，造成这个错误的原因是缺乏WpdPack文件，百度搜出来这个文件的全名应该是"WinPcap Developer's Pack"，下载后解压（地址上面已给出），把解压后的文件夹里面的include
 文件夹下的所有文档（不包含include这个根目录）整体拷贝到python的头文件目录(我的是C:\Python27\include)，如下图2-2所示：
+
 ![image](Win7_X64下python27安装pcapy/拷贝头文件.png)
 <div align='center'>图2-2  拷贝头文件</div>
+
 ##### 2.3、无法打开wpcap.lib文件
 　　解决第二个问题后，再次执行安装时，还会报如下错误：
 ```bash
