@@ -23,6 +23,182 @@ $$
 &emsp;&emsp;为了求解该凸优化问题，先构造出其广义拉格朗日函数（见本博客“拉格朗日对偶问题”专栏），如下式1-1：
 
 $$
-L(x,\alpha,\beta) = {\frac{1}{2} {||w||}}^2 - { \sum\_{i=1}^N \alpha\_i  y\_i (\vec w · \vec x\_i) } +  { \sum\_{i=1}^N \alpha\_i }
+L(\vec w, \vec \alpha, b) = {\frac{1}{2} {||w||}}^2 - { \sum\_{i=1}^N \alpha\_i  y\_i (\vec w · \vec x\_i + b) } +  { \sum\_{i=1}^N \alpha\_i }
+\tag{1 - 1}
+$$
+
+&emsp;&emsp;由拉格朗日对偶问题（见本博客[“拉格朗日对偶问题”专栏](https://flat2010.github.io/2017/07/02/拉格朗日对偶问题)）可知，原始问题的解转化为如下问题的解：
+
+$$
+\max \limits\_{\vec \alpha} \min \limits\_{w,b}{L(\vec w, \vec \alpha, b)}
+\tag{1 - 2}
+$$
+
+&emsp;&emsp;欲求解该问题，要先求解$L(\vec w, \vec \alpha, b)$对$\vec w, b$的极小值，再求对$\vec \alpha$的极大值。
+
+### 1.1 求极小值
+&emsp;&emsp;要求$\min \limits\_{w,b}{L(\vec w, \vec \alpha, b)}$，利用高数的知识，只需要分别对$\vec w, b$求偏导并另其等于零即可求出极小值情况下$\vec w, b, \vec \alpha$这些未知变量需要满足的约束条件，即要求解如下两个方程：
+
+$$
+\nabla \_ \vec w L(\vec w, \vec \alpha, b) = 0
+\tag{1 - 3}
+$$
+
+$$
+\nabla \_ b L(\vec w, \vec \alpha, b) = 0
+\tag{1 - 4}
+$$
+
+&emsp;&emsp;网上几乎所有资料在讲解上式（1 - 3）、(1 - 4)的时候，都是直接给出一个结果，并没有给出详细的证明和求解过程，大多数人在看的时候也是一眼带过，似乎认为得出这种结果是理所当然的，然而数学中从来就没有理所当然。
+&emsp;&emsp;我们来看看式（1 - 3），式中要求的偏导是对一个**向量$\vec w$**，注意，$\vec w$是一个**向量**，是我们的权重系数向量$\vec w = (w\_1, \ w\_2, \ \dots)$，**不是一个标量（Scalar）！**我们在高数里面学的函数的极值问题求解，是针对某个标量而言的，非数学专业的同学可以回想下，你们大学学过函数对向量的偏导吗，没有吧？所以我们不能简单的把$\frac{1}{2} ||\vec w||^2$对向量$\vec w$的偏导按照对标量$w$的偏导的求解方法来做。
+&emsp;&emsp;设输入的维度为$M$，则我们有权重向量$\vec w = (w\_1, \ w\_2, \ \dots, \ w\_M)$，则：
+
+$$
+\frac{1}{2} ||\vec w||^2 = \vec w · \vec w = w\_1^2 + w\_2^2 + \dots + w\_M^2
+$$
+
+&emsp;&emsp;于是有广义拉格朗日函数（1 - 1）第一项$\frac{1}{2} ||\vec w||^2$对向量$\vec w$的偏导如下（标量对向量的偏导的求解参见本博客的“概念定义杂记”专栏）：
+
+$$
+\begin{split}
+\frac {\partial(\frac{1}{2} ||\vec w||^2)} {\partial \vec w} &= (\frac {\partial(\frac{1}{2} ||\vec w||^2)} {\partial w\_1}, \ \frac {\partial(\frac{1}{2} ||\vec w||^2)} {\partial w\_2}, \ \dots, \ \frac {\partial(\frac{1}{2} ||\vec w||^2)} {\partial w\_M}) \\\\
+&= (\frac{1}{2} · 2w\_1, \ \frac{1}{2} · 2w_2, \ \dots, \ \frac{1}{2} · 2w\_M) \\\\
+&= (w\_1, \ w_2, \ \dots, \ w\_M) \\\\
+&= \vec w
+\end{split}
 \tag{1 - 5}
+$$
+
+&emsp;&emsp;我们再来看式（1 - 1）的第二项，${ \sum\_{i=1}^N \alpha\_i  y\_i (\vec w · \vec x\_i + b) }$，该项又可以拆分成两项${ \sum\_{i=1}^N \alpha\_i · y\_i · \vec w · \vec x\_i}$及${ \sum\_{i=1}^N \alpha\_i · y\_i · b}$，后一项因为不包含与$\vec w$相关的内容，因此根据标量对向量的求导法则，该项对向量$\vec w$的偏导恒为零向量，因此我们直接忽略这项，直接看第一项的结果。
+
+$$
+\begin{split}
+{\sum\_{i=1}^N \alpha\_i · y\_i · \vec w · \vec x\_i} &= \alpha\_1 · y\_1 · \vec w · \vec x\_1 + \alpha\_2 · y\_2 · \vec w · \vec x\_2 + \dots + \alpha\_N · y\_N · \vec w · \vec x\_N \\\\
+\end{split}
+\tag{1 - 6}
+$$
+
+&emsp;&emsp;为了方便书写，我们把上式记作$g(\vec w, \ \vec \alpha)$，于是根据标量对向量的偏导法则有：
+
+$$
+\begin{split}
+\frac{\partial [g(\vec w, \ \vec \alpha)]}{\partial \vec w} &= \alpha\_1 · y\_1 \frac{\partial (\vec w · \vec x\_1)}{\partial \vec w} + \alpha\_2 · y\_2 \frac{\partial (\vec w · \vec x\_2)}{\partial \vec w} + \dots + \alpha\_N · y\_N  \frac{\partial (\vec w · \vec x\_N)}{\partial \vec w} \\\\
+&= \sum\_{i=1}^N \alpha\_i · y\_i \frac{\partial (\vec w · \vec x\_i)}{\partial \vec w} \\\\
+&= \sum\_{i=1}^N \alpha\_i · y\_i \frac{\partial (w\_1 · x\_i^1 + w\_2 · x\_i^2 + \dots + w\_M · x\_i^M)}{\partial \vec w} \\\\
+&= \sum\_{i=1}^N \alpha\_i · y\_i (x\_i^1 , \ x\_i^2 , \ \dots , \ x\_i^M) \\\\
+&= \sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i
+\end{split}
+\tag{1 - 7}
+$$
+
+&emsp;&emsp;注意：上式中$x\_i^k$表示的是第$i$个样本的第$k$个特征（或属性）的取值，而非$x\_i$的$k$次方。
+&emsp;&emsp;我们再来看式（1 - 1）第三项${\sum\_{i=1}^N \alpha\_i }$，该项是由拉格朗日乘子组成的，不含与向量$\vec w$相关的项，同样由标量对向量的偏导法则，该项对向量$\vec w$求偏导后恒为零向量，即有$\frac{\partial ({\sum\_{i=1}^N \alpha\_i })}{\partial \vec w} \equiv 0$，我们同样忽略该项。
+&emsp;&emsp;综上，我们有：
+
+$$
+\nabla \_ \vec w L(\vec w, \vec \alpha, b) = \vec w - \sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i
+\tag{1 - 8}
+$$
+
+&emsp;&emsp;对于式（1 - 4），因为求的是对**标量b**的偏导，与我们在大学时候学的内容契合，这里就不赘述，可得到：
+
+$$
+\nabla \_ b L(\vec w, \vec \alpha, b) = \sum\_{i=1}^N \alpha\_i · y\_i
+\tag{1 - 9}
+$$
+
+&emsp;&emsp;分别另式（1 - 8）、（1 - 9）等于零，即可求解出极值情况未知变量需要满足的约束条件，可得：
+
+$$
+\begin{cases}
+\vec w = \sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i \\\\
+\sum\_{i=1}^N \alpha\_i · y\_i
+\tag{1 - 10}
+\end{cases}
+$$
+
+&emsp;&emsp;将上式回代入式（1 - 1），可以消掉未知变量$\vec w、b$。
+
+### 1.2 回代化简
+&emsp;&emsp;同样的，几乎所有对这部分的讲解都是一笔带过，让有些数学基础不怎么好的同学有点犯晕，不知道是怎么得出来的。这里我给出详细的回代化简过程，我们先来看$\frac{1}{2} ||\vec w||^2$这一项：
+
+$$
+\begin{split}
+\frac{1}{2} ||\vec w||^2 &= \vec w · \vec w \\\\
+&= \frac{1}{2} (\sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i) · (\sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i) \\\\
+&= \frac{1}{2} (\alpha\_1 · y\_1 · \vec x\_1 + \dots + \alpha\_N · y\_N · \vec x\_N) · (\alpha\_1 · y\_1 · \vec x\_1 + \dots + \alpha\_N · y\_N · \vec x\_N)
+\end{split}
+\tag{1 - 11}
+$$
+
+&emsp;&emsp;上式展开出来后不进行同类项合并的话，一共有$N·N = N^2$项，为了方便书写和分析，我们把这些展开项按顺序放在一个$N·N$的方阵$A$中，矩阵的元素$A\_{ij}$表示上式中第一个括号中的第$i$项与后面括号的第$j$项相乘的结果，可得：
+
+$$
+\begin{split}
+A &= \frac{1}{2} 
+\begin{bmatrix}
+\alpha\_1 y\_1 \vec x\_1 · \alpha\_1 y\_1 \vec x\_1 & \alpha\_1 y\_1 \vec x\_1 · \alpha\_2 y\_2 \vec x\_2 & \dots & \alpha\_1 y\_1 \vec x\_1 · \alpha\_N y\_N \vec x\_N \\\\
+\alpha\_2 y\_2 \vec x\_2 · \alpha\_1 y\_1 \vec x\_1 & \alpha\_2 y\_2 \vec x\_2 · \alpha\_2 y\_2 \vec x\_2 & \dots & \alpha\_2 y\_2 \vec x\_2 · \alpha\_N y\_N \vec x\_N \\\\
+\vdots & \vdots & \vdots & \vdots \\\\
+\alpha\_N y\_N \vec x\_N · \alpha\_1 y\_1 \vec x\_1 & \alpha\_N y\_N \vec x\_N · \alpha\_2 y\_2 \vec x\_2 & \dots & \alpha\_N y\_N \vec x\_N · \alpha\_N y\_N \vec x\_N \\\\
+\end{bmatrix} \\\\
+\\\\
+&= \frac{1}{2} 
+\begin{bmatrix}
+\alpha\_1^2 y\_1^2 \vec x\_1 · \vec x\_1 & \alpha\_1 \alpha\_2 y\_1 y\_2 \vec x\_1 · \vec x\_2 & \dots & \alpha\_1 \alpha\_N y\_1 y\_N \vec x\_1 · \vec x\_N \\\\
+\alpha\_1 \alpha\_2 y\_1 y\_2 \vec x\_1 · \vec x\_2 & \alpha\_2^2 y\_2^2 \vec x\_2 · \vec x\_2 & \dots & \alpha\_2 \alpha\_N y\_2 y\_N \vec x\_2 · \vec x\_N \\\\
+\vdots & \vdots & \vdots & \vdots \\\\
+\alpha\_1 \alpha\_N y\_1 y\_N \vec x\_1 · \vec x\_2 & \alpha\_2 \alpha\_N y\_2 y\_N \vec x\_1 · \vec x\_N & \dots & \alpha\_N^2 y\_N^2 \vec x\_N · \vec x\_N \\\\
+\end{bmatrix}
+\end{split}
+\tag{1 - 12}
+$$
+
+&emsp;&emsp;可以看出，这是一个对称阵，矩阵的任意元素为$\alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j), 其中\ i,j \in [1,N]$，因此有：
+
+$$
+\frac{1}{2} ||\vec w||^2 = \frac{1}{2} \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j)
+\tag{1 - 13}
+$$
+
+&emsp;&emsp;再来看第二项的化简，结合式（1 - 10)，如下：
+
+$$
+\begin{split}
+{\sum\_{i=1}^N \alpha\_i  y\_i (\vec w · \vec x\_i + b) } &= {\sum\_{i=1}^N \alpha\_i  y\_i (\vec w · \vec x\_i) } + b{ \sum\_{i=1}^N \alpha\_i  y\_i} \\\\
+&= {\sum\_{i=1}^N \alpha\_i  y\_i ((\sum\_{j=1}^N \alpha\_j · y\_j · \vec x\_j) · \vec x\_i) } + b · 0 \\\\
+&= \sum\_{j=1}^N \alpha\_i y\_i(\alpha\_1 y\_1 \vec w · \vec x\_1 + \alpha\_2 y\_2 \vec w · \vec x\_2 + \dots + \alpha\_N y\_N \vec w · \vec x\_N) · \vec x\_i \\\\
+&= \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j)
+\end{split}
+\tag{1 - 14}
+$$
+
+&emsp;&emsp;最后来看第三项${\sum\_{i=1}^N \alpha\_i }$，该项已是最简形式，保持不变。
+&emsp;&emsp;综上，我们有：
+
+$$
+\begin{split}
+\min \limits\_{\vec w, b} L(\vec w, \vec \alpha, b) &= \frac{1}{2} \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j) - \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j) + \sum\_{i=1}^N \alpha\_i \\\\
+&= -\frac{1}{2} \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j) + \sum\_{i=1}^N \alpha\_i
+\end{split}
+\tag{1 - 15}
+$$
+
+### 1.3 求极大值
+&emsp;&emsp;更进一步，式（1 - 2）的对偶问题就是上式再对$\vec \alpha$极大化，如下：
+
+$$
+\max \limits\_{\vec \alpha} \lbrack -\frac{1}{2} \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j) + \sum\_{i=1}^N \alpha\_i \rbrack
+\tag{1 - 16}
+$$
+
+&emsp;&emsp;当然，上式的$\vec \alpha$还需要满足约束条件：
+
+$$
+\begin{cases}
+\sum\_{i=1}^N \alpha\_i y\_i = 0 \\\\
+\\\\
+\alpha\_i \geq 0, \ i=1,2, \dots, N
+\end{cases}
+\tag{1 - 17}
 $$
