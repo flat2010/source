@@ -27,6 +27,8 @@ L(\vec w, \vec \alpha, b) = {\frac{1}{2} {||w||}}^2 - { \sum\_{i=1}^N \alpha\_i 
 \tag{1 - 1}
 $$
 
+&emsp;&emsp;这里有一点要做说明：<font color="blue">上式中的第二项表明，每一个输入样本都可以成为一个不等式（或等式）约束，**每一个样本对应一个唯一的拉格朗日乘子$\alpha\_i$，请务必牢记这一点，这将有助于你理解下文**。</font>
+
 &emsp;&emsp;由拉格朗日对偶问题（见本博客[“拉格朗日对偶问题”专栏](https://flat2010.github.io/2017/07/02/拉格朗日对偶问题)）可知，原始问题的解转化为如下问题的解：
 
 $$
@@ -112,7 +114,7 @@ $$
 $$
 \begin{cases}
 \vec w = \sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i \\\\
-\sum\_{i=1}^N \alpha\_i · y\_i
+\sum\_{i=1}^N \alpha\_i · y\_i = 0
 \tag{1 - 10}
 \end{cases}
 $$
@@ -196,9 +198,24 @@ $$
 
 $$
 \begin{cases}
+\\\\
 \sum\_{i=1}^N \alpha\_i y\_i = 0 \\\\
 \\\\
 \alpha\_i \geq 0, \ i=1,2, \dots, N
 \end{cases}
 \tag{1 - 17}
 $$
+
+&emsp;&emsp;上式的求解，也是利用构造拉格朗日函数，然后分别对各个拉格朗日乘子求偏导并令偏导式等于零，即可求解出各个拉格朗日乘子的值，即可以求出$\vec \alpha = {\alpha\_1, \ \alpha\_2, \ \dots, \ \alpha\_N}$，利用$\vec \alpha$以及式（1 - 10），我们就可以求出分割超平面的参数$\vec w^\*$。对于式（1 - 10）：
+
+$$
+\begin{split}
+\vec w &= \sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i \\\\
+&= \alpha\_1 y\_1 \vec x\_1 + \ \alpha\_1 y\_2 \vec x\_2 + \ \dots + \ \alpha\_N y\_N \vec x\_N
+\end{split}
+\tag{1 - 18}
+$$
+
+&emsp;&emsp;由上式可知，对于$\alpha_i = 0$的拉格朗日乘子（约束不起作用），它对整个式子的贡献值$\equiv 0$，因此无论这些乘子取什么值，都不会影响分割超平面，因此我们再计算的时候也只需要代入$\alpha\_i > 0$的拉格朗日乘子。这里要多说一句，该系列的前一篇[机器学习算法系列之三：SVM3](2017/04/30/机器学习算法系列之三：SVM3)中我们已经证明了$\vec w^\*$的存在性，并且$\vec w^\* = 0$并非问题的解，因此必然存在$\alpha\_j > 0, \ j \in [1, N]$，即至少有一项不等式（或等式）约束是起作用的。
+
+&emsp;&emsp;求出$\vec w$后，结合$\vec \alpha$的值，再根据**KKT条件**的**互补松弛$\alpha\_i [y(\vec w^\* · x + b^\*) - 1] = 0$**，可以求解出分割超平面参数$b^\*$，这样整个分割超平面$H(\vec w, b)$就确定了。
