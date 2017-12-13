@@ -94,7 +94,7 @@ $$
 $$
 
 &emsp;&emsp;注意：上式中$x\_i^k$表示的是第$i$个样本的第$k$个特征（或属性）的取值，而非$x\_i$的$k$次方。
-&emsp;&emsp;我们再来看式（1 - 1）第三项${\sum\_{i=1}^N \alpha\_i }$，该项是由拉格朗日乘子组成的，不含与向量$\vec w$相关的项，同样由标量对向量的偏导法则，该项对向量$\vec w$求偏导后恒为零向量，即有$\frac{\partial ({\sum\_{i=1}^N \alpha\_i })}{\partial \vec w} \equiv 0$，我们同样忽略该项。
+&emsp;&emsp;我们再来看式（1 - 1）第三项${\sum\_{i=1}^N \alpha\_i }$，该项是由拉格朗日乘子组成的，不含与向量$\vec w$相关的项，同样由标量对向量的偏导法则，该项对向量$\vec w$求偏导后恒为零向量，即有$\partial ({\sum\_{i=1}^N \alpha\_i }) / \partial \vec w \equiv 0$，我们同样忽略该项。
 &emsp;&emsp;综上，我们有：
 
 $$
@@ -126,7 +126,8 @@ $$
 
 $$
 \begin{split}
-\frac{1}{2} ||\vec w||^2 &= \vec w · \vec w \\\\
+& \frac{1}{2} ||\vec w||^2 \\\\
+&= \vec w · \vec w \\\\
 &= \frac{1}{2} (\sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i) · (\sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i) \\\\
 &= \frac{1}{2} (\alpha\_1 · y\_1 · \vec x\_1 + \dots + \alpha\_N · y\_N · \vec x\_N) · (\alpha\_1 · y\_1 · \vec x\_1 + \dots + \alpha\_N · y\_N · \vec x\_N)
 \end{split}
@@ -167,7 +168,8 @@ $$
 
 $$
 \begin{split}
-{\sum\_{i=1}^N \alpha\_i  y\_i (\vec w · \vec x\_i + b) } &= {\sum\_{i=1}^N \alpha\_i  y\_i (\vec w · \vec x\_i) } + b{ \sum\_{i=1}^N \alpha\_i  y\_i} \\\\
+& {\sum\_{i=1}^N \alpha\_i  y\_i (\vec w · \vec x\_i + b) } \\\\
+&= {\sum\_{i=1}^N \alpha\_i  y\_i (\vec w · \vec x\_i) } + b{ \sum\_{i=1}^N \alpha\_i  y\_i} \\\\
 &= {\sum\_{i=1}^N \alpha\_i  y\_i ((\sum\_{j=1}^N \alpha\_j · y\_j · \vec x\_j) · \vec x\_i) } + b · 0 \\\\
 &= \sum\_{j=1}^N \alpha\_i y\_i(\alpha\_1 y\_1 \vec w · \vec x\_1 + \alpha\_2 y\_2 \vec w · \vec x\_2 + \dots + \alpha\_N y\_N \vec w · \vec x\_N) · \vec x\_i \\\\
 &= \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j)
@@ -180,7 +182,8 @@ $$
 
 $$
 \begin{split}
-\min \limits\_{\vec w, b} L(\vec w, \vec \alpha, b) &= \frac{1}{2} \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j) - \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j) + \sum\_{i=1}^N \alpha\_i \\\\
+& \min \limits\_{\vec w, b} L(\vec w, \vec \alpha, b) \\\\
+&= \frac{1}{2} \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j) - \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j) + \sum\_{i=1}^N \alpha\_i \\\\
 &= -\frac{1}{2} \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j) + \sum\_{i=1}^N \alpha\_i
 \end{split}
 \tag{1 - 15}
@@ -205,31 +208,31 @@ $$
 \tag{1 - 17}
 $$
 
-&emsp;&emsp;上式的求解，也是利用构造拉格朗日函数，然后分别对各个拉格朗日乘子求偏导并令偏导式等于零，即可求解出各个拉格朗日乘子的值，即可以求出$\vec \alpha = {\alpha\_1, \ \alpha\_2, \ \dots, \ \alpha\_N}$，利用$\vec \alpha$以及式（1 - 10），我们就可以求出分割超平面的参数$\vec w^\*$。对于式（1 - 10）：
+&emsp;&emsp;上式的求解，也是利用构造拉格朗日函数，然后分别对各个拉格朗日乘子求偏导并令偏导式等于零，即可求解出各个拉格朗日乘子的值，即可以求出$\vec \alpha^\* = (\alpha\_1^\*, \ \alpha\_2^\*, \ \dots, \ \alpha\_N^\*)$，利用$\vec \alpha^\*$以及式（1 - 10），我们就可以求出分割超平面的参数$\vec w^\*$。根据式（1 - 10）有：
 
 $$
 \begin{split}
-\vec w &= \sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i \\\\
-&= \alpha\_1 y\_1 \vec x\_1 + \ \alpha\_1 y\_2 \vec x\_2 + \ \dots + \ \alpha\_N y\_N \vec x\_N
+\vec w^\* &= \sum\_{i=1}^N \alpha\_i^\* · y\_i · \vec x\_i \\\\
+&= \alpha\_1^\* y\_1 \vec x\_1 + \ \alpha\_2^\* y\_2 \vec x\_2 + \ \dots + \ \alpha\_N^\* y\_N \vec x\_N
 \end{split}
 \tag{1 - 18}
 $$
 
-&emsp;&emsp;由上式可知，对于$\alpha_i = 0$的拉格朗日乘子（约束不起作用），它对整个式子的贡献值$\equiv 0$，因此无论这些乘子取什么值，都不会影响分割超平面，因此我们再计算的时候也只需要代入$\alpha\_i > 0$的拉格朗日乘子。这里要多说一句，该系列的前一篇[机器学习算法系列之三：SVM3](2017/04/30/机器学习算法系列之三：SVM3)中我们已经证明了$\vec w^\*$的存在性，并且$\vec w^\* = 0$并非问题的解，因此必然存在$\alpha\_j > 0, \ j \in [1, N]$，即至少有一项不等式（或等式）约束是起作用的。
-&emsp;&emsp;求出$\vec w$后，结合$\vec \alpha$的值，再根据**KKT条件**的**互补松弛$\alpha\_i [y\_i(\vec w^\* · x\_i + b^\*) - 1] = 0$**，可以求解出分割超平面参数$b^\*$，这样整个分割超平面$H(\vec w, b)$就确定了。对$\vec b^\*$的求解，由互不松弛条件可知：
+&emsp;&emsp;由上式可知，对于$\alpha_i^\* = 0$的拉格朗日乘子（约束不起作用），它对整个式子的贡献值$\equiv 0$，因此无论这些乘子取什么值，都不会影响分割超平面，因此我们再计算的时候也只需要代入$\alpha\_i^\* > 0$的拉格朗日乘子。这里要多说一句，该系列的前一篇[机器学习算法系列之三：SVM3](2017/04/30/机器学习算法系列之三：SVM3)中我们已经证明了$\vec w^\*$的存在性，并且$\vec w^\* = 0$并非问题的解，因此必然存在$\alpha\_j^\* > 0, \ j \in [1, N]$，即至少有一项不等式（或等式）约束是起作用的。
+&emsp;&emsp;求出$\vec w^\*$后，结合$\vec \alpha^\*$的值，再根据**KKT条件**的**互补松弛$\alpha\_i^\* [y\_i(\vec w^\* · x\_i + b^\*) - 1] = 0$**，可以求解出分割超平面参数$b^\*$，这样整个分割超平面$H(\vec w, b)$就确定了。对$b^\*$的求解，由互补松弛条件可知：
 
 #### 1.3.1 $\alpha\_i = 0$
 &emsp;&emsp;当$\alpha\_i = 0$即对应的第$i$个样本约束不起作用时，则$\vec b^\*$可取任意值而互不松弛条件均能满足，这个时候$\vec b^\*$有任意多个解，因此无法由拉格朗日乘子为零的样本来计算$\vec b^\*$。
 
 #### 1.3.2 $\alpha\_i > 0$
-&emsp;&emsp;当$\alpha\_i = 0$即对应的第$i$个样本约束起作用时，要满足互不松弛条件，则必然有：
+&emsp;&emsp;当$\alpha\_i > 0$即对应的第$i$个样本约束起作用时，要满足互不松弛条件，则必然有：
 
 $$
 y\_i(\vec w^\* · x\_i + b^\*) - 1 = 0
 \tag{1 - 19}
 $$
 
-&emsp;&emsp;此时可以利用不为零的拉个朗日乘子求出$\vec b^\*$，如下：
+&emsp;&emsp;此时可以利用不为零的拉格朗日乘子求出$\vec b^\*$，如下：
 
 $$
 \begin{split}
@@ -239,19 +242,19 @@ y\_i^2(\vec w^\* · x\_i + b^\*) - y\_i &= 0
 $$
 
 &emsp;&emsp;$\because$
-&emsp;&emsp;&emsp;&emsp;$y\_i^2 \equiv 1, \ \vec w^\* = \sum\_{j=1}^N \alpha\_j · y\_j · \vec x\_j$
+&emsp;&emsp;&emsp;&emsp;$y\_i^2 \equiv 1, \ \vec w^\* = \sum\_{j=1}^N \alpha\_j^\* · y\_j · \vec x\_j$
 &emsp;&emsp;$\therefore$
 
 $$
 \begin{split}
 & (\vec w^\* · x\_i + b^\*) = y\_i \\\\
-& b^\* = y\_i - \vec w^\* · x\_i \\\\
-& b^\* = y\_i - \sum\_{j=1}^N \alpha\_j · y\_j · \vec x\_j · x\_i
+& b^\* = y\_i - \vec w^\* · \vec x\_i \\\\
+& b^\* = y\_i - \sum\_{j=1}^N \alpha\_j^\* · y\_j · \vec x\_j · \vec x\_i
 \end{split}
 \tag{1 - 20}
 $$
 
-&emsp;&emsp;到此，整个超平面的参数$\vec w^\*、b^\*$就解出来了。
+&emsp;&emsp;到此，整个超平面的参数$\vec w^\*、b^\*$就解出来了，并且从上式可以看出，<font color="red">$b^\*$的求解也不依赖于那些拉格朗日乘子为0的样本。</font>
 
 ### 1.4 求解过程梳理
 &emsp;&emsp;SVM的分割超平面的求解就讲完了（严格来说是**线性可分SVM**的分割超平面），**因为这部分内容实在是太重要了，它是我们深入理解SVM精髓的基石**，所以我们重新把分割超平面的求解算法梳理一下，方便大家回顾之前的内容和平滑的切入到下一章的内容。
@@ -259,8 +262,8 @@ $$
 * 确定样本特征属性维度M，确定样本数量N；
 * 根据样本数量确定拉格朗日乘子数量N，并设拉格朗日乘子向量为$\vec \alpha = (\alpha\_1, \ \alpha\_2, \ \dots, \ \alpha\_N)$;
 * 求函数$-\frac{1}{2} \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j) + \sum\_{i=1}^N \alpha\_i$在给定条件$\sum\_{i=1}^N \alpha\_i y\_i = 0$及$\alpha\_i \geq 0, \ i=1, 2, 3, \dots, N$下的极值点（<font color="red">注意：极值点有可能在边界上取得。</font>）；
-* 利用上一步求得的解$\vec \alpha^\* = (\alpha\_1^\*, \ \alpha\_2^\*, \ \dots, \ \alpha\_N^\*$计算$\vec w^\* = \sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i$；
-* 取任意一个**非零拉格朗日乘子$\alpha\_i$**对应的样本$(\vec x\_i , y\_i)$计算$b^\* = y\_i - \sum\_{j=1}^N \alpha\_j · y\_j · \vec x\_j · x\_i$；
+* 利用上一步求得的解$\vec \alpha^\* = (\alpha\_1^\*, \ \alpha\_2^\*, \ \dots, \ \alpha\_N^\*)$计算$\vec w^\* = \sum\_{i=1}^N \alpha\_i^\* · y\_i · \vec x\_i$；
+* 取任意一个**非零拉格朗日乘子$\alpha\_i^\*$**对应的样本$(\vec x\_i , y\_i)$计算$b^\* = y\_i - \sum\_{j=1}^N \alpha\_j^\* · y\_j · \vec x\_j · \vec x\_i$；
 * 利用上述结果得出分割超平面方程$\vec w^\* · \vec x + b^\* = 0$。
 
 ### 1.5\* 极大转极小转化
@@ -278,7 +281,7 @@ $$
 $$
 
 ### 1.6 实例
-&emsp;&emsp;理论比较抽象，我们用一个例子来说明上述求解过程，帮助理解消化。<font color="red">注：以下例子选自[李航](http://blog.sina.com.cn/u/2060750830)老师的《统计学习方法》P107的例2，略有改动和补充说明</font>
+&emsp;&emsp;理论比较抽象，我们用一个例子来说明上述求解过程，帮助理解消化。<font color="red">注：以下例子选自[李航](http://blog.sina.com.cn/u/2060750830)老师的《统计学习方法》P107的例2，略有改动和补充说明。</font>
 #### 1.6.1 已知条件
 &emsp;&emsp;三个样本点$x\_1 = (3,3)^T, \ x\_2 = (4,3)^T, \ x\_3 = (1,1)^T $，两个正样本$y\_1 = +1, \ y\_2 = +1$，一个负样本$y\_3 = -1$。
 #### 1.6.2 解决问题
@@ -293,25 +296,26 @@ $$
   $$
   \begin{split}
   & \max \limits\_{\vec \alpha} \lbrack -\frac{1}{2} \sum\_{i=1}^3 \sum\_{j=1}^3 \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j) + \sum\_{i=1}^3 \alpha\_i \\\\
-  &= -\frac{1}{2} (18 \alpha\_1^2 + 25 \alpha\_2^2 + 2 \alpha\_3^2 + 42 \alpha\_1 \alpha\_2 - 12 \alpha\_1 \alpha\_3 - 14 \alpha\_2 \alpha\_3) - \alpha\_1 - \alpha\_2 - \alpha\_3
+  &= -\frac{1}{2} (18 \alpha\_1^2 + 25 \alpha\_2^2 + 2 \alpha\_3^2 + 42 \alpha\_1 \alpha\_2 - 12 \alpha\_1 \alpha\_3 - 14 \alpha\_2 \alpha\_3) \\\\
+  & \ \  - \alpha\_1 - \alpha\_2 - \alpha\_3
   \end{split}
   \tag{1 - 22}
   $$
   ​
-  ​&emsp;&emsp;记上式为$f(\alpha\_1 , \alpha\_2 , \alpha\_3)$，将$\alpha\_3 = \alpha\_1 + \alpha\_2$有：
+  ​&emsp;&emsp;记上式为$f(\alpha\_1 , \alpha\_2 , \alpha\_3)$，将$\alpha\_3 = \alpha\_1 + \alpha\_2$代入上式有：
   ​
   $$
   f(\alpha\_1 , \alpha\_2 , \alpha\_3) = -4 \alpha\_1^2 - \frac{13}{2} \alpha\_2^2 - 10 \alpha\_1 \alpha\_2 + 2\alpha\_1 + 2 \alpha\_2
   \tag{1 - 23}
   $$
 
-  ​&emsp;&emsp;求偏导有：
+  ​&emsp;&emsp;分别对$\alpha\_1、\alpha\_2$求偏导有：
   
   $$
   \begin{split}
   \begin{cases}
-  \frac{\partial f(\alpha\_1 , \alpha\_2 , \alpha\_3)}{\partial \alpha\_1} = -8 \alpha\_1 - 10 \alpha\_2 + 2= 0 \\\\
-  \frac{\partial f(\alpha\_1 , \alpha\_2 , \alpha\_3)}{\partial \alpha\_2} = -13 \alpha\_2 - 10 \alpha\_1 + 2= 0
+  \frac{\partial f(\alpha\_1 , \alpha\_2 , \alpha\_3)}{\partial \alpha\_1} \ = \ -8 \alpha\_1 - 10 \alpha\_2 + 2= 0 \\\\
+  \frac{\partial f(\alpha\_1 , \alpha\_2 , \alpha\_3)}{\partial \alpha\_2} \ = \ -13 \alpha\_2 - 10 \alpha\_1 + 2= 0
   \end{cases}
   \end{split}
   \tag{1 - 24}
@@ -321,15 +325,51 @@ $$
   
   $$
   \begin{cases}
-  \alpha\_1 = \frac{3}{2} \\\\
-  \alpha\_2 = -1
+  \alpha\_1^\* = \frac{3}{2} \\\\
+  \alpha\_2^\* = -1
   \end{cases}
+  \tag{1 - 25}
   $$
   
-  &emsp;&emsp;虽然求出了解，但是该解对应的$\alpha\_2$不满足约束$\alpha\_2$，因此极大值必然在边界处。因为拉个朗日乘子的取值范围都是$[0 , \ +\infty)$，显然拉个朗日乘子不可能取右边界$+\infty$，因此必然在左边界即0处取极值。
+  &emsp;&emsp;虽然求出了解，但是该解对应的$\alpha\_2^\*$不满足约束$\alpha\_2^\* \geq 0$，因此极大值必然在边界处。因为拉格朗日乘子的取值范围都是$[0 , \ +\infty)$，显然拉格朗日乘子不可能取右边界$+\infty$，因此必然在左边界即0处取极值。
 
-- ​若$\alpha\_1 = 0$，则$f(\alpha\_1 , \alpha\_2 , \alpha\_3) = - \frac{13}{2} \alpha\_2^2 + 2 \alpha\_2$，再用该式对$\alpha\_2$求一阶、二阶偏导可求出极大值点为$\alpha\_2 = -\frac{2}{13}$，不符合拉格朗日乘子恒为非负的条件，因此极大值不在此处。
+- ​若$\alpha\_1 = 0$，则$f(\alpha\_1 , \alpha\_2 , \alpha\_3) = - \frac{13}{2} \alpha\_2^2 + 2 \alpha\_2$，再用该式对$\alpha\_2$求一阶偏导可求出极值点为$\alpha\_2^\* = -\frac{2}{13}$，不符合拉格朗日乘子恒为非负的条件，因此最大值不在此处。
+- 若$\alpha\_2 = 0$，则$f(\alpha\_1 , \alpha\_2 , \alpha\_3) = - 4 \alpha\_1^2 + 2 \alpha\_1$，再用该式对$\alpha\_1$求一阶偏导可求出极值点为$\alpha\_1^\* = \frac{1}{4}$，且$\frac{\partial f^2}{\partial \alpha\_1^2} = -8$，则在$\alpha\_2^\* = 0 ， \alpha\_1^\* = \frac{1}{4}$处$f(\alpha\_1 , \alpha\_2 , \alpha\_3)$取得最大值，此时有$\alpha\_3^\* = \alpha\_1^\* + \alpha\_2^\* = \frac{1}{4}$。
+- 根据$\alpha\_1^\* = \alpha\_3^\* = \frac{1}{4}$可求得$\vec w^\*$：
 
+  $$
+  \begin{split}
+  \vec w^\* &= \alpha\_1^\* y\_1 \vec x\_1 + \alpha\_3^\* y\_3 \vec x\_3 \\\\
+  &= \frac{1}{4} · (+1) · (3,3)^T + \frac{1}{4} · (-1) · (1,1)^T \\\\
+  &= (\frac{1}{2} , \frac{1}{2})^T
+  \end{split}
+  \tag{1 - 26}
+  $$
+
+- 再根据$\vec w^\* = (\frac{1}{2}, \frac{1}{2})^T$或选择拉格朗日乘子$\alpha\_1^\* = \frac{1}{4}(或 \alpha\_3^\* = \frac{1}{4})$来计算$b^\*$：
+
+  $$
+  \begin{split}
+  b^\* &= y\_1 - [\alpha\_1^\* y\_1 (\vec x\_1 · \vec x\_1) + \alpha\_3^\* y\_3 (\vec x\_3 · \vec x\_1)]\\\\
+  &= +1 - [\frac{1}{4} · (+1) · (3,3)^T·(3,3)^T + \frac{1}{4} · (-1) · (1,1)^T·(3,3)^T] \\\\
+  &= -2 \\\\
+  \\\\
+  或 \\\\
+  \\\\
+  b^\* &= y\_1 - \vec w^\* · \vec x\_1 \\\\
+  &= +1 - (\frac{1}{2}, \frac{1}{2})^T · (3,3)^T \\\\
+  &= -2
+  \end{split}
+  $$
+
+- 所以分割超平面为：
+  
+  $$
+  \frac{1}{2} x^{(1)} + \frac{1}{2} x^{(2)} - 2 = 0
+  \tag{1 - 27}
+  $$
+  
+  <font color="red">注：上式中$x^{(i)}$表示某个样本的第$i$个属性的值。</font>
 
 ### 1.7 小结
 &emsp;&emsp;从上述过程可以看出，SVM分割超平面的求解是先把不易求解的原始**极小极大最优化问题**转换为易于求的**极大极小最优化问题**。
@@ -338,5 +378,38 @@ $$
 &emsp;&emsp;求出$\vec \alpha$后即可求出分割超平面。
 
 ## 二、支持向量
-&emsp;&emsp;
-&emsp;&emsp;
+&emsp;&emsp;在上一节中我们提到了分割超平面参数$\vec w, \ b$的求解不需要那些拉格朗日乘子为0的样本参与，因为这些样本对分割超平面的位置不产生任何有效约束力。从几何上来理解，这些样本因为远离交界处，因此不会影响分割面。
+&emsp;&emsp;而对于那些拉格朗日乘子不为0的样本（更准确的说，是训练数据集中对应于$\alpha\_i > 0$的样本），它们直接决定了分割超平面，我们称这些样本点为<font color="red">**支持向量**</font>，如下图2-1所示：
+
+<img src="机器学习算法系列之三：SVM4/支持向量示意图.png" width="300" height="250" />
+<div align='center' >图2-1　　支持向量示意图</div> 
+
+### 2.1 定义
+&emsp;&emsp;由上可知，支持向量一定在边界处，它的文字性定义为：
+> &emsp;&emsp;在线性可分情况下，训练数据集的样本点中与分离超平面距离最近的样本点的实例成为支持向量。
+> <p style="text-align:right">——摘自李航《统计学习方法》$P\_{102}$</p>
+
+&emsp;&emsp;其数学定义式如下：
+
+$$
+\begin{split}
+& y\_i (\vec w^\* · \vec x\_i + b^\*) - 1 = 0 , \ \alpha\_i^\* > 0\\\\
+\\\\
+& 或 \\\\
+\\\\
+& (\vec w^\* · \vec x\_i + b^\*) = \pm1  , \ \alpha\_i^\* > 0\\\\
+\end{split}
+$$
+
+### 2.2 小结
+&emsp;&emsp;支持向量机的名字就是由支持向量而来的，从这一点出发就可以理解支持向量的重要性。一旦决定分割超平面的支持向量保持不变，其它的点无论怎么改变，都不会影响分割超平面，也就不会影响我们的分类决策模型。但是线性SVM由于其线性特征，导致其对噪声数据比较敏感，它只适用于线性可分的数据（即能通过画一条直线区分开），一旦不同类别数据之间互有交错，就完全无法解决，线性/非线性支持向量机示意图如下所示：
+
+
+
+<img src="机器学习算法系列之三：SVM4/线性支持向量机示意图.png" width="500" height="350" />
+<div align='center' >图2-2　　线性支持向量机示意图</div> 
+
+<img src="机器学习算法系列之三：SVM4/非线性支持向量机示意图.png" width="500" height="350" />
+<div align='center' >图2-3　　非线性支持向量机示意图</div> 
+
+&emsp;&emsp;对于这个问题，我们将在本系列后面的文章里讲怎么解决。
