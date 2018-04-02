@@ -35,6 +35,4 @@ More info: [Generating](https://hexo.io/docs/generating.html)
 $ hexo deploy
 ```
 
-markdown中空格＋空格＋回车实现换行。
-shit+space+两个空格实现首行缩进（刚好整整两个中文字符）
 More info: [Deployment](https://hexo.io/docs/deployment.html)

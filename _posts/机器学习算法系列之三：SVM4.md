@@ -127,7 +127,7 @@ $$
 $$
 \begin{split}
 & \frac{1}{2} ||\vec w||^2 \\\\
-&= \vec w · \vec w \\\\
+&= \frac{1}{2} \vec w · \vec w \\\\
 &= \frac{1}{2} (\sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i) · (\sum\_{i=1}^N \alpha\_i · y\_i · \vec x\_i) \\\\
 &= \frac{1}{2} (\alpha\_1 · y\_1 · \vec x\_1 + \dots + \alpha\_N · y\_N · \vec x\_N) · (\alpha\_1 · y\_1 · \vec x\_1 + \dots + \alpha\_N · y\_N · \vec x\_N)
 \end{split}
