@@ -360,7 +360,11 @@ $$
 
 #### 2.3.3 误分类间隔任意
 &emsp;&emsp;当样本被误分类且该样本到分割超平面的间隔为任意条件时，我们有$0 < |y\_i(\vec w \cdot \vec x\_i + b)| 及 y\_i(\vec w \cdot \vec x\_i + b) < 0$。对于该类样本，毫无疑问需要支付一个松弛代价，并且通过惩罚参数C对该类行为的惩罚力度进行调整，也即当$1 - y\_i(\vec w \cdot \vec x\_i + b) > 1$时，$L(Y, \ f(X)) > 0$。
+&emsp;&emsp;综合上述三种情况，我们可以绘制出满足要求的函数的图像如下所示：
 
+<div  style="text-align:center;"><img src="机器学习算法系列之三：SVM5/Hinge-Loss函数图像.png" width="400" height="300">图2-2　　SVM损失函数示意图</img></div>
+
+&emsp;&emsp;对比图（2-1）和图（2-2）可知，我们理想的SVM损失函数实际上就是Hinge-Loss函数。
 #### 2.3.4 SVM合页损失函数
 &emsp;&emsp;综合上述三种情况可得线性非可分SVM的合页损失函数表达式为：
 
