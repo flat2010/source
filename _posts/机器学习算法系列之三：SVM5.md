@@ -159,7 +159,7 @@ $$
 \tag{1 - 8}
 $$
 
-&emsp;&emsp;由上式可以看出，**线性非可分情况下的广义拉个朗日函数和线性可分情况下的广义拉格朗日函数的极小值问题求解结果是等价的**，即有如下结果：
+&emsp;&emsp;由上式可以看出，**线性非可分情况下的广义拉个朗日函数和线性可分情况下的广义拉格朗日函数的极小值问题求解形式是等价的，差别在于两者的支持向量有所不同，后者的支持向量还包括了一些并不严格满足间隔边界要求的样本点**，即有如下结果：
 
 $$
 \underbrace{\min \limits\_{\vec w, \vec b} L(\vec w, \vec b, \vec \alpha)}\_{线性可分极小值}= \underbrace{\min \limits\_{\vec w, \vec b,\vec \xi} L(\vec w, \vec b,\vec \xi, \vec \alpha, \vec \beta)}\_{线性非可分极小值}= -\frac{1}{2} \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j (\vec x\_i · \vec x\_j) + \sum\_{i=1}^N \alpha\_i
