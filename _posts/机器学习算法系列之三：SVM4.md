@@ -8,6 +8,7 @@ toc: true
 ---
 <img src="机器学习算法系列之三：SVM4/SVM4首图.png" width="350" height="250" />
 ><font color=#0000FF face="微软雅黑" size=4>“你听过的最有哲理，也是你最喜欢的一句话是什么？”，他问。</br>“我也不知道...”，她淡淡的说道。</font>
+
 ***
 
 ## 一、对偶算法
@@ -375,7 +376,19 @@ $$
 &emsp;&emsp;从上述过程可以看出，SVM分割超平面的求解是先把不易求解的原始**极小极大最优化问题**转换为易于求的**极大极小最优化问题**。
 &emsp;&emsp;转换后，通过先求解极小化问题，求解出超平面参数$\vec w, b$与拉格朗日乘子$\vec \alpha$的关系，从而消去原最优化问题中的未知变量$\vec w, b$，只剩下$\vec \alpha$。
 &emsp;&emsp;消元后，再求解极大化(也可以转换为求极小化)问题的解，从而求出$\vec \alpha$。
-&emsp;&emsp;求出$\vec \alpha$后即可求出分割超平面。
+&emsp;&emsp;求出$\vec \alpha$后即可求出分割超平面，其公式为：
+
+$$
+(\sum\_{i=1}^N \alpha\_i^\* · y\_i · \vec x\_i) \cdot \vec x  + b^\* = \sum\_{i=1}^N \alpha\_i^\* · y\_i · (\vec x\_i \cdot \vec x)  + b^\* = 0
+\tag{1 - 28}
+$$
+
+&emsp;&emsp;此外，其分类决策函数则为：
+
+$$
+f(x) = sign \lgroup \sum\_{i=1}^N \alpha\_i^\* · y\_i · (\vec x\_i \cdot \vec x)  + b^\* \rgroup
+\tag{1 - 29}
+$$
 
 ## 二、支持向量
 &emsp;&emsp;在上一节中我们提到了分割超平面参数$\vec w, \ b$的求解不需要那些拉格朗日乘子为0的样本参与，因为这些样本对分割超平面的位置不产生任何有效约束力。从几何上来理解，这些样本因为远离交界处，因此不会影响分割面。
