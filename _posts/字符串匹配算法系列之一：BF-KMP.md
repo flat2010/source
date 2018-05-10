@@ -691,3 +691,12 @@ L3:    ··· ···
 &emsp;&emsp;如果你没看懂，不要怀疑自己，一定是我没有讲清楚，请务必在评论中指出（目前查看、回复评论均需要代理）。
 
 &emsp;&emsp;我们一直坚信，授人以鱼远不如授人渔。
+
+&emsp;&emsp;参考资料如下：
+
+1. [从头到尾彻底理解KMP（2014年8月22日版）](https://blog.csdn.net/v_july_v/article/details/7041827);
+2. [字符串匹配的KMP算法](http://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html);
+3. [KMP 算法 —— 字符串匹配算法](https://youjiexia.github.io/2017/05/03/KMP-Algorithm/);
+4. [柔性字符串匹配](https://book.douban.com/subject/2038862/);
+5. [算法导论](https://book.douban.com/subject/20432061/);
+
