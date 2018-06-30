@@ -2,7 +2,7 @@
 title: Docker上部署Hadoop等完全分布式集群
 date:  2017-08-12 02:25:17
 tags: [Docker, Hadoop, Spark, 分布式]
-categories: [安装配置教程,  Docker应用] 
+categories: [Docker] 
 comments: true
 toc: true
 mathjax: true

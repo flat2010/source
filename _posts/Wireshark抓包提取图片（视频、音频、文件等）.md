@@ -2,12 +2,11 @@
 title: Wireshark抓包提取图片（视频、音频、文件等）
 date: 2016-11-18 14:33:25
 tags: [Wireshark, HTTP]
-categories: [日常技巧总结, Wireshark]
+categories: [日常技巧总结]
 comments: true
 ---
 
 ><font color=#0000FF face="微软雅黑" size=4>The more deep you dive , the more you will hear.</font>
-
 
 ***
 

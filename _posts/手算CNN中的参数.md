@@ -1,10 +1,7 @@
 ---
 title: CNN中的参数解释及计算
-tags:
-  - 卷积
-  - 池化
-categories:
-  - 深度学习
+tags: [卷积, 池化]
+categories: [深度学习]
 comments: true
 toc: true
 date: 2018-06-15 06:03:14

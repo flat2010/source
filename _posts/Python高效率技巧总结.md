@@ -2,7 +2,7 @@
 title: Python算法教程笔记
 date: 2016-12-11 21:46:05
 tags: [Python, 算法]  
-categories: [编程笔记, Python]  
+categories: [读书笔记]  
 comments: true  
 ---
 
@@ -22,7 +22,7 @@ comments: true
 ##### 2.1 字符串操作效率
 　　字符串类型的数据在编程中接触的比较多，
 
- 
+
 ##### 2.2 Set和List的那些事
 　　python中的两种常用对象Set和List应该说在使用上大家都能得心应手，当然也知道这两者的差异：
 　　①Set是无序无重复元素的集合;
@@ -54,7 +54,7 @@ def set_search():
 #输出二者的查询时间		
 print(timeit("set_search()", setup='from __main__ import set_search'))
 print(timeit("list_search()", setup='from __main__ import list_search'))
-``` 
+```
 　　输出结果:
 　　　　Set>> 0.11968003701895213
 　　　　List>> <font color=#FF0000>17.639899451222846</font>　

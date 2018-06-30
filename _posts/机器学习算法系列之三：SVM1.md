@@ -2,13 +2,13 @@
 title: 机器学习算法系列之三：SVM（1）
 date: 2017-01-29 06:53:36
 tags: [机器学习, 算法, SVM, 支持向量机]
-categories: [机器学习, 支持向量机] 
+categories: [机器学习] 
 comments: true 
 ---
 
 ![image](机器学习算法系列之三：SVM1/SVM首图.png)
 ><font color=#0000FF face="微软雅黑" size=4>Give me some data, I can create a new world!</font>
-***  
+***
 
 <div align='center'><font color=#000000 size=15>**序**</font></div>  
 
@@ -20,7 +20,7 @@ comments: true
 > <font color=#9933cc size=5>**`纸上得来终觉浅，绝知此事要躬行！`**</font>
 
 &emsp;&emsp;还是那句老话，个人水平有限，欢迎随时不吝赐教，感激之至!</br>  
-  
+
   
 
 <div align='center'><font color=#000000 size=15>**正文**</font></div>  

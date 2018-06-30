@@ -2,13 +2,13 @@
 title: 机器学习算法系列之三：SVM（2）
 date: 2017-02-17 01:41:34
 tags: [机器学习, 算法, SVM, 支持向量机]
-categories: [机器学习,  支持向量机] 
+categories: [机器学习] 
 comments: true
 toc: true
 ---
 <img src="机器学习算法系列之三：SVM2/SVM2首图.PNG" width="350" height="250" />
 ><font color=#0000FF face="微软雅黑" size=4>Hyper plane!</font>
-***   
+***
 
 ## 一、SVM  
 &emsp;&emsp;  &emsp;&emsp;<font color=#000000 size=5>**在**</font>[机器学习算法系列之三：SVM（1）](https://flat2010.github.io/2017/01/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97%E4%B9%8B%E4%B8%89%EF%BC%9ASVM1/)中我们提到了SVM，但并没有给出它的定义，也没有做过多的介绍。现在，是时候隆重的介绍我们本系列的主角了。在这小节里面，下面就从SVM的定义，用途，优缺点来这些方面来进行叙述。  
@@ -112,10 +112,8 @@ $$\hat{\gamma} =
 \min \limits_{i=1,···,N} \hat{\gamma_i}
 \tag{2 - 4}
 $$
-
 #### 2.2.4 相互关系
 &emsp;&emsp;几何间隔和函数间隔之间的关系式为：
-
 $$
 \begin{split}
 几何间隔 &= \frac{函数间隔}{超平面法向量模} \\\\
@@ -123,7 +121,6 @@ $$
 第i个样本的几何间隔 &= \frac{第i个样本的函数间隔}{超平面法向量模}
 \end{split}
 $$
-
 $$\gamma_i = \frac{\hat{\gamma_i}}{||w||}
 \tag{2 - 5}
 $$
@@ -131,7 +128,6 @@ $$
 $$\gamma = \frac{\hat{\gamma}}{||w||}
 \tag{2 - 6}
 $$
-
 $$\hat{\gamma} = \gamma·||w||
 \tag{2 - 7}
 $$
@@ -184,12 +180,10 @@ y_i \lgroup {\vec w} · \vec x_i + {b} \rgroup \geq \hat{\gamma}, \ \ i = 1,2,·
 \end{cases}
 \tag{2 - 12}
 $$
-
 &emsp;&emsp;至于为什么这样做不会影响最优化结果，几乎所有资料和教材都只是说不会改变几何间隔，也不会改变式2-10的不等式约束，但没有进行证明。要证明对参数的这种改变不会影响训练结果，我们只需要证明将函数间隔$\hat{\gamma}$调整为1时，以下两点成立即可：    
 &emsp;&emsp;**1. 最大硬间隔（几何间隔）的值$\gamma$不会发生改变；**
 &emsp;&emsp;**2. 最优化问题的约束条件未发生改变；**
 &emsp;&emsp;对第一点，假定将$\vec w、b$同时扩大$\lambda（\lambda > 0）$倍，则几何间隔变为：
-
 $$
 \begin{split}
 \max \limits\_{\lambda \vec w \ , \ \lambda · b}{\gamma} &= 
@@ -201,9 +195,7 @@ $$
 & = \max \limits\_{\vec w \ , \ b}{\gamma}
 \end{split}
 $$
-
 &emsp;&emsp;第一条得证！对于第二条，其实在证明第一条的时候已经包含了，这里还是单独写出来吧，方便阅读，权重向量$\vec w$和常数$b$调整后，对训练数据集中的任意样本$(x_i , y_i)$，有：
-
 $$
 \begin{split}
 y_i \lgroup \frac{\lambda \vec w}{||\lambda w||} · \vec x_i + \frac{\lambda · b}{||\lambda w||} \rgroup &= 
@@ -222,10 +214,8 @@ $$
 y_i \lgroup {\vec w} · \vec x_i + {b} \rgroup \geq 
 \gamma · ||w|| = \hat{\gamma}
 $$
-
 &emsp;&emsp;第二条亦得证！<font color="red" size=3px>从几何上来理解，权重向量$\vec w$和常数$b$同时乘以系数$\lambda$，原分割超平面并没有改变（参见平面方程的几何意义），自然几何间隔也就没有改变（所有点到分割面的距离都没改变），但是函数间隔却扩大了$\lambda$倍。</font>
 &emsp;&emsp;有了上面的结论，考虑将$\vec w$、$b$同时扩大$\lambda =  \frac{1}{\hat{\gamma}}$倍，函数间隔变为：
-
 $$
 \begin{split}
 \hat{\gamma}' &=  y_i \lgroup {\lambda \vec w} · \vec x_i + {\lambda · b} \rgroup \\\\
@@ -235,7 +225,6 @@ $$
 & = 1
 \end{split}
 $$
-
 &emsp;&emsp;即原最优化问题转换为与下式等价的优化问题：
 
 $$\begin{cases}
@@ -262,7 +251,6 @@ y_i \lgroup {\vec w} · \vec x_i + {b} \rgroup - 1  \geq 0, \ \ i = 1,2,···,N
 \end{cases}
 \tag{2 - 14}
 $$
-
 &emsp;&emsp;这是一个**凸二次规划/凸优化问题（convex quadratic programming）**，通俗点说，SVM的凸二次优化问题就是要**寻找参数向量$\vec w$和常数b，使得模型不但能正确的把两个类别的数据区分开，还要让这种分类具有最大的确定性**。凸优化问题是一个非常经典的问题（也是机器学习当中最常见的优化问题），但是理解SVM不需要太深入的了解凸二次规划问题，那本章末尾就简单介绍下凸二次规划问题，想了解更多的可以参考本系列相关专题，仅供有兴趣的同学参考。
 
 ### 2.4 凸优化问题

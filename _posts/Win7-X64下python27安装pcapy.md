@@ -2,12 +2,11 @@
 title: Win7_X64下python27安装pcapy
 date: 2016-12-15 14:47:24
 tags: [Python, Pcapy]
-categories: [安装配置教程, Python]
+categories: [安装配置教程]
 comments: true
 ---
 
 ><font color=#0000FF face="微软雅黑" size=4>The more deep you dive , the more you will hear.</font>
-
 
 ***
 
@@ -72,7 +71,7 @@ C:\Users\dev>SET VS90COMNTOOLS=%VS110COMNTOOLS%      ----VS2012版
 C:\Users\dev>SET VS90COMNTOOLS=%VS120COMNTOOLS%      ----VS2013版
 ```
 　　这是比较讲道理的做法，但是有时候电脑它不跟你讲道理啊。那么这时候可以直接去配置你的系统环境变量VS90COMNTOOLS，如下图2-1所示（同时，需要根据你VS版本配置）：
-  
+
 ![image](Win7_X64下python27安装pcapy/设置环境变量.png)
 <div align='center'>图2-1  直接配置环境变量VS90COMNTOOLS</div>
 

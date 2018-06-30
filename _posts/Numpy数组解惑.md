@@ -2,7 +2,7 @@
 title: Numpy数组解惑
 date: 2017-05-31 12:18:19
 tags: [Numpy, Python] 
-categories: [读书笔记, 利用Python进行数据分析]  
+categories: [读书笔记]  
 comments: true  
 toc: true
 ---

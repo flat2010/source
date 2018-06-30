@@ -2,7 +2,7 @@
 title: Python绘制3D图形-1
 date: 2017-05-08 12:32:52
 tags: [Python, 3D图形]
-categories: [编程笔记,  Python] 
+categories: [Python] 
 comments: true
 toc: true
 ---

@@ -2,7 +2,7 @@
 title: Ubuntu 14.04 X86安装Oracle 11g R2指南
 date: 2016-08-01 23:42:01
 tags: [Oracle, Ubuntu, 数据库]
-categories: [安装配置教程, Oracle安装] 
+categories: [安装配置教程] 
 comments: true 
 ---
 

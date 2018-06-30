@@ -2,7 +2,7 @@
 title: Ubuntu各发行版详情
 date: 2017-12-17 21:04:36
 tags: [Linux, Ubuntu]
-categories: [Linux, Ubuntu] 
+categories: [Linux] 
 comments: true
 toc: true
 ---
