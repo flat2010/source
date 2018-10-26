@@ -2,7 +2,7 @@
 title: 机器学习算法系列之三：SVM6
 date: 2018-04-21 15:52:58
 tags: [机器学习, 算法, SVM, 支持向量机]
-categories: [机器学习] 
+categories: [机器学习,  支持向量机] 
 comments: true
 toc: true
 ---
@@ -85,7 +85,7 @@ $$
 
 ### 1.4 常用核函数
 &emsp;&emsp;虽然有了核函数让我们不必再去苦苦寻觅映射函数，那么如果没有一些较为通用的核函数供我们选择和使用，我们的问题也只是从寻找映射函数变成了寻找核函数，问题的复杂性可能并不会降低。
-&emsp;&emsp;由此，我们提供一些比较常用的核函数以供调试、选择（关于如何选择核函数，目前学术界还没有一个具体的公式能给出答案，大多数情况下还是依赖于我们的经验，结合调试来选择。）。下面就列出一些常用的核函数表达式：
+&emsp;&emsp;由此，我们提供一些比较常用的核函数以供调试、选择（**关于如何选择核函数，目前学术界还没有一个具体的公式能给出答案，大多数情况下还是依赖于我们的经验，结合实际业务来选择。**）。下面就列出一些常用的核函数表达式：
 
 | 名称 |  表达式  |           参数            | 备注 |
 | :--: | :--------: | :-----------------------: | :--: |
@@ -96,14 +96,17 @@ $$
 | 拉普拉斯核函数 | $K(\vec x\_i, \vec x\_j) = exp\lgroup - \frac{\Arrowvert \vec x\_i - \vec x\_j \Arrowvert}{\sigma} \ \ \rgroup$ |  $\sigma > 0$|  属于高斯核函数变种，对参数敏感性降低  |
 | Sigmoid核函数 | $K(\vec x\_i, \vec x\_j) = tanh\lgroup a \cdot {\vec x\_i}^T \cdot \vec x\_j + c)$ |  $a > 0, c < 0$|  ——  |
 | 二次有理核函数 | $K(\vec x\_i, \vec x\_j) = 1 - \frac{\Arrowvert \vec x\_i - \vec x\_j \Arrowvert^2}{\Arrowvert \vec x\_i - \vec x\_j \Arrowvert^2 + \ c}$ | $c$ | 高斯核函数的替代品，作用域广，对参数特别敏感 |
-| ANOVA核函数 | $K(\vec x\_i, \vec x\_j) = exp \lgroup -\sigma (\vec x\_i^k - \vec x\_j^k)^2 \rgroup ^d$ |  $\sigma > 0$|  也属于RBF核函数，适用于多维回归问题  |
+| ANOVA核函数 | $K(\vec x\_i, \vec x\_j) = exp \lgroup -\sigma (\vec x\_i^k - \vec x\_j^k)^2 \rgroup ^d$ |  $\sigma > 0, d \geq 1$|  也属于RBF核函数，适用于多维回归问题  |
 | 多元二次核函数 | $K(\vec x\_i, \vec x\_j) = (\Arrowvert \vec x\_i - \vec x\_j \Arrowvert^2 + \ c^2 )^{0.5}$ | $c$ | 可替代二次有理核，非正定核函数 |
 | 逆多元二次核函数 | $K(\vec x\_i, \vec x\_j) = (\Arrowvert \vec x\_i - \vec x\_j \Arrowvert^2 + \ c^2 )^{-0.5}$ | $c$ | 不会导致核相关矩阵奇异 |
-| 对数核函数 | $K(\vec x\_i, \vec x\_j) = -log(1 \ + \ \Arrowvert \vec x\_i - \vec x\_j \Arrowvert^d)$ | $c$ | 图像分割上经常使用 |
+| 对数核函数 | $K(\vec x\_i, \vec x\_j) = -log(1 \ + \ \Arrowvert \vec x\_i - \vec x\_j \Arrowvert^d)$ | $d$ | 图像分割上经常使用 |
+| 字符串核函数 | $K(s, t) = \sum{u \in \Sigma^n} \sum_{s(i)=t(j)=u} \lambda^{l(i)} \lambda^{l(j)}$ | $d$ | 文本分类，信息检索广泛使用 |
+
 
 &emsp;&emsp;参考链接：
-- 1. [总结一下遇到的各种核函数](https://blog.csdn.net/wsj998689aa/article/details/47027365)；
-- 2. [SVM的常见核函数及其选取](https://blog.csdn.net/u011746554/article/details/70941587)；
+- 1\. [总结一下遇到的各种核函数](https://blog.csdn.net/wsj998689aa/article/details/47027365)；
+- 2\. [SVM的常见核函数及其选取](https://blog.csdn.net/u011746554/article/details/70941587)；
+- 3\. [理解字符串核函数](https://blog.csdn.net/shijing_0214/article/details/51134802);
 
 ### 1.5 非线性支持向量机
 &emsp;&emsp;针对非线性数据，利用核函数学习出来的分类决策模型即为非线性支持向量机。训练样本中，参与了分割超平面决策的这些我们称为非线性支持向量。
@@ -112,7 +115,7 @@ $$
 $$
 \begin{split}
 f(x) &= sign \lgroup \sum\_{i=1}^N \alpha\_i^\* · y\_i · K(\vec x\_i, \vec x)  + b^\* \rgroup \\\\
-&= sign \lgroup \sum\_{i=1}^N \alpha\_i^\* · y\_i · K(\vec x\_i, \vec x)  + \underbrace{\lgroup y\_j - \sum\_{i=1}^N \alpha\_i^\* \cdot y\_i \cdot K(\vec x\_i, \vec x\_j)\rgroup}\_{b^\*} \rgroup
+&= sign \lgroup \underbrace{\sum\_{i=1}^N \alpha\_i^\* · y\_i · K(\vec x\_i, \vec x)}_{\vec w \cdot \vec x}  + \underbrace{\lgroup y\_j - \sum\_{i=1}^N \alpha\_i^\* \cdot y\_i \cdot K(\vec x\_i, \vec x\_j)\rgroup}\_{b^\*} \rgroup
 \end{split}
 \tag{1 - 6}
 $$
