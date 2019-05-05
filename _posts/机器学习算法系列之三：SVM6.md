@@ -38,7 +38,14 @@ $$
 $$
 
 &emsp;&emsp;上式（1-1）的意思就是，我将任意两个样本代入核函数进行计算，其结果与先将这两个样本映射到新空间再点积的结果等价。
-&emsp;&emsp;原始的空间（**输入空间，记为$\chi$为欧式空间或离散集合**）中，数据是非线性可分的。原始数据映射后，在映射后的新空间（**特征空间/希尔伯特空间，记为$H$**）中，数据是线性可分的。因为输入空间中数据非线性可分，所以输入空间中的分割面必然是**超曲面**。相反，特征空间中的分割面则是**超平面**。
+
+&emsp;&emsp;为了方便理解，我画了如下的图示：
+
+<img src="机器学习算法系列之三：SVM6/核函数作用示意图.png" width="450" height="200" />
+
+&emsp;&emsp;如上图所示，核函数的作用就是替代我们要找寻的映射函数的**映射 + 内积**效果。
+
+&emsp;&emsp;原始的空间（**输入空间，记为$\chi$为欧式空间或离散集合**）中，数据是非线性可分的。原始数据映射后，在映射后的新空间（**特征空间/希尔伯特空间，记为$H​$**）中，数据是线性可分的。因为输入空间中数据非线性可分，所以输入空间中的分割面必然是**超曲面**。相反，特征空间中的分割面则是**超平面**。
 &emsp;&emsp;以上这些概念暂时不懂没有关系，有个印象就可以了，我们会在后面做详细的介绍。
 
 ### 1.3 核函数定义之谜
@@ -74,24 +81,76 @@ $$
 
 $$
 \begin{cases}
-\min \limits\_{\vec \alpha} \lbrack \frac{1}{2} \sum\_{i=1}^N \sum\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j \color{red}{K(\vec x\_i, \vec x\_j)} - \sum\_{i=1}^N \alpha\_i  \\\\
-\\\\
-sign \lgroup \sum\_{i=1}^N \alpha\_i^\* · y\_i · \color{red}{K(\vec x\_i, \vec x)}  + b^\* \rgroup
+\min \limits\_{\vec \alpha} \lbrack \frac{1}{2} \sum\limits\_{i=1}^N \sum\limits\_{j=1}^N \alpha\_i \alpha\_j y\_i y\_j \color{red}{K(\vec x\_i, \vec x\_j)} - \sum\limits\_{i=1}^N \alpha\_i \rbrack \\
+\\
+sign \lgroup \sum\limits\_{i=1}^N \alpha\_i^\* · y\_i · \color{red}{K(\vec x\_i, \vec x)}  + b^\* \rgroup
 \tag{1 - 5}
 \end{cases}
 $$
 
 &emsp;&emsp;核函数的本质是，通过在输入空间中计算函数$K(\vec x\_i, \vec x\_j)$的值，我们就能获得在特征空间中的向量的内积值$<\phi(\vec x\_i), \ \phi(\vec x\_j)>$，并且完全不需要映射函数。
 
-### 1.4 常用核函数
+### 1.4 为什么用核函数
+&emsp;&emsp;尽管已经对核函数解释了这么多，很多读者可能还是无法直观的感受到：我们为什么要用核函数？下面我们通过一个例子来说明这一点。
+&emsp;&emsp;给定两个样本向量$\vec{x}=(2, 3, 1, 3)^T 、\vec{z}=(3, 2, 2, 4)^T$，映射函数：
+$$
+\begin{split}  
+\phi(\vec{x})=(&x_1^2,\quad x_1 \cdot x_2, \quad x_1 \cdot x_3, \quad x_1 \cdot x_4,  \\ 
+&x_2 \cdot x_1, \quad x_2^2, \quad x_2 \cdot x_3, \quad x_2 \cdot x_4, \\
+&x_3 \cdot x_1, \quad x_3\cdot x_2, \quad x_3^2,  \quad x_3 \cdot x_4, \\
+&x_4 \cdot x_1, \quad x_4 \cdot x_2, \quad x_4 \cdot x_3, \quad x_4^2)^T \end{split}
+$$
+&emsp;&emsp;<font color="red" size=2>注：上述映射函数$\phi$是一个$\mathbb{R}^4$到$\mathbb{R}^{16}$即4维空间到16维空间的映射函数。</font>
+
+&emsp;&emsp;核函数：
+
+$$
+K(\vec{x}, \vec{z}) = (\vec{x} \cdot \vec{z})^2
+$$
+
+&emsp;&emsp;常规做法(映射 + 内积)，则有：
+
+$$
+\begin{split}
+\phi(\vec{x}) &= (4, 6, 2, 6, 6, 9, 3, 9, 2, 3, 1, 3, 6, 9, 3, 9)^T \\
+\phi(\vec{z}) &= (9, 6, 6, 12, 6, 4, 4, 8, 6, 4, 4, 8, 12, 8, 8, 16)^T \\
+\phi(\vec{x}) \cdot \phi(\vec{z}) &= 4 \cdot 9 + 6 \cdot 6 + 2 \cdot 6 + 6 \cdot 12 + 6 \cdot 6 + 9 \cdot 4 \\
+&\quad + 3 \cdot 4 + 9 \cdot 8 + 2 \cdot 6 + 3 \cdot 4 + 1 \cdot 4 + 3 \cdot 8 \\
+&\quad + 6 \cdot 12 + 9 \cdot 8 + 3 \cdot 8 + 9 \cdot 16 \\
+&= 676
+\end{split}
+$$
+
+&emsp;&emsp;核函数计算，可得：
+$$
+\begin{split}
+K(\vec{x}, \vec{z}) &= ((2, 3, 1, 3)^T \cdot (3, 2, 2, 4)^T)^2 \\
+&= (2 \cdot 3 + 3 \cdot 2 + 1 \cdot 2 + 3 \cdot 4)^2 \\
+&= 26^2 \\
+&= 676
+\end{split}
+$$
+
+&emsp;&emsp;对比上述两个求解过程可以看出，在最终计算结果完全一致的情况下，核函数所需的计算量大幅减少。
+
+&emsp;&emsp;若样本特征取值变成浮点型，并且其绝对值较大，同时映射后的维度也较大的情况下，这种计算量的节省更为可观。
+
+&emsp;&emsp;在某些场景下，若映射后的维度$n \rightarrow \infty$(即映射到无限维特征空间)，这时即使我们能找到合适的映射函数$\phi(\vec{x})$，也会因为维度爆炸而无法计算映射后的值。而核函数却能轻而易举的解决这个难题。
+
+&emsp;&emsp;综上，使用核函数的原因有如下几点：
+- 1\. 显著减少计算量；
+- 2\. 解决映射导致的维度爆炸问题(无限维空间无法计算问题)；
+- 3\. 避免显示定义映射函数$\phi(\vec{x})$问题(难以确定)；
+
+### 1.5 常用核函数
 &emsp;&emsp;虽然有了核函数让我们不必再去苦苦寻觅映射函数，那么如果没有一些较为通用的核函数供我们选择和使用，我们的问题也只是从寻找映射函数变成了寻找核函数，问题的复杂性可能并不会降低。
-&emsp;&emsp;由此，我们提供一些比较常用的核函数以供调试、选择（**关于如何选择核函数，目前学术界还没有一个具体的公式能给出答案，大多数情况下还是依赖于我们的经验，结合实际业务来选择。**）。下面就列出一些常用的核函数表达式：
+&emsp;&emsp;由此，我们提供一些比较常用的核函数以供调试、选择（**关于如何选择核函数，目前学术界还没有一个具体的公式能给出答案，大多数情况下还是依赖于我们的经验同时结合实际业务来选择。**）。下面就列出一些常用的核函数表达式：
 
 | 名称 |  表达式  |           参数            | 备注 |
 | :--: | :--------: | :-----------------------: | :--: |
-| 线性核函数 | $K(\vec x\_i, \vec x\_j) = {\vec x\_i}^T \cdot \vec x\_j$ |  |  ——  |
+| 线性核函数 | $K(\vec x\_i, \vec x\_j) = a \cdot {\vec x\_i}^T \cdot \vec x\_j + c$ | $a、c$ |  ——  |
 | 多项式核函数 | $K(\vec x\_i, \vec x\_j) = (a \cdot {\vec x\_i}^T \cdot \vec x\_j + c)^d$ |  $a、c、d(d \geq 1)$ </br> $d = 1$时即为线性核函数| 特别适合正交归一化后的数据   |
-| 高斯核函数 | $K(\vec x\_i, \vec x\_j) = exp\lgroup - \frac{\Arrowvert \vec x\_i - \vec x\_j \Arrowvert^2}{2 \sigma^2} \ \rgroup$ |  高斯核带宽$\sigma > 0$|  抗噪能力强，对参数敏感  |
+| 高斯核函数<br>(RBF) | $K(\vec x\_i, \vec x\_j) = exp\lgroup - \frac{\Arrowvert \vec x\_i - \vec x\_j \Arrowvert^2}{2 \sigma^2} \ \rgroup$ |  高斯核带宽$\sigma > 0$|  抗噪能力强，对参数敏感  |
 | 指数核函数 | $K(\vec x\_i, \vec x\_j) = exp\lgroup - \frac{\Arrowvert \vec x\_i - \vec x\_j \Arrowvert}{2 \sigma^2} \ \rgroup$ |  $\sigma > 0$|  属于高斯核函数变种，对参数敏感性降低，适用范围相对较窄  |
 | 拉普拉斯核函数 | $K(\vec x\_i, \vec x\_j) = exp\lgroup - \frac{\Arrowvert \vec x\_i - \vec x\_j \Arrowvert}{\sigma} \ \ \rgroup$ |  $\sigma > 0$|  属于高斯核函数变种，对参数敏感性降低  |
 | Sigmoid核函数 | $K(\vec x\_i, \vec x\_j) = tanh\lgroup a \cdot {\vec x\_i}^T \cdot \vec x\_j + c)$ |  $a > 0, c < 0$|  ——  |
@@ -100,7 +159,14 @@ $$
 | 多元二次核函数 | $K(\vec x\_i, \vec x\_j) = (\Arrowvert \vec x\_i - \vec x\_j \Arrowvert^2 + \ c^2 )^{0.5}$ | $c$ | 可替代二次有理核，非正定核函数 |
 | 逆多元二次核函数 | $K(\vec x\_i, \vec x\_j) = (\Arrowvert \vec x\_i - \vec x\_j \Arrowvert^2 + \ c^2 )^{-0.5}$ | $c$ | 不会导致核相关矩阵奇异 |
 | 对数核函数 | $K(\vec x\_i, \vec x\_j) = -log(1 \ + \ \Arrowvert \vec x\_i - \vec x\_j \Arrowvert^d)$ | $d$ | 图像分割上经常使用 |
-| 字符串核函数 | $K(s, t) = \sum{u \in \Sigma^n} \sum_{s(i)=t(j)=u} \lambda^{l(i)} \lambda^{l(j)}$ | $d$ | 文本分类，信息检索广泛使用 |
+| 字符串核函数 | $K(s, t) = \sum\limits\_{u \in \Sigma^n} \sum\limits\_{(i,j):s(i)=t(j)=u} \lambda^{l(i)} \lambda^{l(j)}$ | $n、\lambda$ | 文本分类，信息检索广泛使用 |
+| 圆形核函数 | $K(\vec x\_i, \vec x\_j) = \frac{2}{\pi} arccos(- \frac{\parallel \vec x\_i - \vec x\_j \parallel}{\sigma}) - \frac{2}{\pi} \frac{\parallel \vec x\_i - \vec x\_j \parallel}{\sigma} (1 - \frac{\parallel \vec x\_i - \vec x\_j \parallel ^2} {\sigma})^{0.5}$ | $\sigma$ | —— |
+| 球形核函数 | $K(\vec x\_i, \vec x\_j) = 1 - \frac{3}{2} \frac{\parallel \vec x\_i - \vec x\_j \parallel}{\sigma} + \frac{1}{2} (\frac{\parallel \vec x\_i - \vec x\_j \parallel ^2} {\sigma})^{3}$ | $\sigma$ | 圆形核函数的简化版 |
+| 波动核函数 | $K(\vec x\_i, \vec x\_j) =\frac{\theta} {\parallel \vec x\_i - \vec x\_j \parallel} sin(\frac{\parallel \vec x\_i - \vec x\_j \parallel} {\theta})$ | $\theta$ | 适用于语音处理 |
+| 曲线核函数 | $\begin{split} K(\vec x\_i, \vec x\_j) = 1 + &\vec x\_i^t \cdot \vec x\_j + \vec x\_i^t \cdot \vec x\_j \min(\vec x\_i, \vec x\_j) \\ - &\frac{\vec x\_i + \vec x\_j}{2} \min(\vec x\_i, \vec x\_j)^2 + \frac{1}{3} \min(\vec x\_i, \vec x\_j)^3 \end{split}$ | $t$ | —— |
+| Bessel核函数 | $K(\vec x\_i, \vec x\_j) = \frac{J_{v+1} (\sigma \parallel \vec x\_i - \vec x\_j \parallel)} {\parallel \vec x\_i - \vec x\_j \parallel ^{-n(v+1)}}$ | $\sigma、n$ | —— |
+| 泛化T-Student核函数 | $K(\vec x\_i, \vec x\_j) = \frac{1}{1 + \parallel \vec x\_i - \vec x\_j \parallel ^ d}$ | $d$ | mercer核 |
+
 
 
 &emsp;&emsp;参考链接：
