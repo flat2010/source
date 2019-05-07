@@ -2,7 +2,7 @@
 title: Git+Github+Hexo在Win7_X64上搭建个人博客
 date: 2016-11-06 21:59:06
 tags: [Hexo, 个人博客]
-categories: [个人博客]
+categories: [Hexo博客]
 ---
 > 时光易逝，记忆也不会永恒。
 
@@ -112,4 +112,5 @@ http://blog.csdn.net/wx_jin/article/details/51027783
 &emsp;&emsp;这是我用md+hexo写的第一篇个人博文，之前完全没有接触过，真的是花了不少时间，因为工作比较忙，只能每天下班后加班到深夜一两点这样子一点一点的来完成，虽然累，但是做完之后的那种成就感，懂的人自然懂。
 &emsp;&emsp;但这只是万里长征第一步，后续准备把之前所有的读书笔记、心得全部搬上来，估计累的够呛。
 &emsp;&emsp;做技术也许就是这样子吧，累并快乐着，虽然很多时候都只是自娱自乐，“子非鱼，安知鱼之乐^--^"。
+
 <div style="text-align:center"><font color=#0000FF face="微软雅黑" size=3></br>Life is short, so let's make it different</font></div>
