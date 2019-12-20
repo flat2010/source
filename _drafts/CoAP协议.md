@@ -19,7 +19,7 @@ date: 2016-10-26 11:53:20
 <centerhead>概念</centerhead><br>
 
 ##  1. 设计初衷
-&emsp;&emsp;据[wikipedia](https://en.wikipedia.org/wiki/Constrained_Application_Protocol#CoAP_Fixed_Header:_Version,_Type,_Token_Length,_Request/Response_Code_and_Message_ID.)词条，`CoAP`协议是一种专用于[constrained devices](https://www.cisoplatform.com/profiles/blogs/classification-of-iot-devices)之间相互通信的物联网协议。其TFC文档编号为[7252](https://tools.ietf.org/html/rfc7252)，缺省端口号为`5683`。`CoAP`协议的设计初衷就是为了方便资源受限型的设备(如手机、网络摄像头等等)能够接入互联网，因为这种类型的设备无法直接使用已有的HTTP协议。
+&emsp;&emsp;据[wikipedia](https://en.wikipedia.org/wiki/Constrained_Application_Protocol#CoAP_Fixed_Header:_Version,_Type,_Token_Length,_Request/Response_Code_and_Message_ID.)词条，`CoAP`协议是一种专用于[constrained devices](https://www.cisoplatform.com/profiles/blogs/classification-of-iot-devices)之间相互通信的物联网协议。其RFC文档编号为[7252](https://tools.ietf.org/html/rfc7252)，缺省端口号为`5683`。`CoAP`协议的设计初衷就是为了方便资源受限型的设备(如手机、网络摄像头等等)能够接入互联网，因为这种类型的设备无法直接使用已有的HTTP协议。
 
 
 
@@ -169,7 +169,6 @@ Client              Server               Client              Server
 &emsp;&emsp;对于**CON**类型的消息，接收者收到后，会返回**ACK**确认，一旦发送后，接收者无需去关心发送者是否收到**ACK**消息，因为如果发送者没有收到**ACK**确认，会自己重发一次请求。这种处理机制大大提高了处理效率。
 
 
-
 <centerhead>深入</centerhead><br>
 
 ## 4. 协议详解
@@ -199,6 +198,8 @@ Client              Server               Client              Server
 &emsp;&emsp;四种消息类型的详细信息如下表所示：
     
 <table><tr><th colspan=4 style="text-align:center;">消息类型</th><th colspan=2 style="text-align:center;">Type字段值</th></tr><tr><td style="text-align:center;">消息方向</td><td style="text-align:center;">中文名称</td><td style="text-align:center;">英文全称</td><td style="text-align:center;">英文简称</td><td style="text-align:center;">十进制</td><td style="text-align:center;">二进制</td</tr><tr><td rowspan=2 style="text-align:center;">请求消息</td><td style="text-align:center;">需确认消息</td><td style="text-align:center;">Confirmable</td><td style="text-align:center;font-weight:bold;">CON</td><td style="text-align:center;">0</td><td style="text-align:center;">..00 ....</td></tr><tr><td style="text-align:center;">无需确认消息</td><td style="text-align:center;">None-confirmable</td><td style="text-align:center;font-weight:bold;">NON</td><td style="text-align:center;">1</td><td style="text-align:center;">..01 ....</td></tr><tr><td rowspan=2 style="text-align:center;">响应消息</td><td style="text-align:center;">确认消息</td><td style="text-align:center;">Acknowledgement</td><td style="text-align:center;font-weight:bold;">ACK</td><td style="text-align:center;">2</td><td style="text-align:center;">..10 ....</td></tr><tr><td style="text-align:center;">重置消息</td><td style="text-align:center;">Reset</td><td style="text-align:center;font-weight:bold;">RST</td><td style="text-align:center;">3</td><td style="text-align:center;">..11 ....</td></tr></table>
+    
+
 &emsp;&emsp;对于请求方向的**CON**和**NON**两种消息，因其用途不同，因此对这两种类型的消息有不同的要求。
 
 ##### 4.1.2.1 **CON**消息
@@ -234,12 +235,13 @@ Client              Server               Client              Server
 
 &emsp;&emsp;综上，整理出下表所示的请求/响应与上述4种消息的组合使用情况表，如下所示：
 <p style="text-align:center;">请求/响应与消息类型组合情况表 </p>
+      
 |          | CON     | NON  | ACK     | RST  |
 | :--------: | :-------: | :----: | :-------: | :----: |
 | **Request**  | <font color="green">&radic;</font> |  <font color="green">&radic;</font>   | <font color="red">&times;</font>  |   <font color="red">&times;</font>   |
 | **Response** |   <font color="green">&radic;</font>       |   <font color="green">&radic;</font>    |   <font color="green">&radic;</font>    |  <font color="red">&times;</font>    |
 | **Empty**    |    *     |   <font color="red">&times;</font>   |   <font color="green">&radic;</font>     |   <font color="green">&radic;</font>   |
-
+     
 &emsp;&emsp;表中符号说明：
 - &radic; &emsp;可以组合使用；
 - &times;&emsp;不能组合使用；
@@ -261,8 +263,11 @@ Client              Server               Client              Server
 ```
 
 &emsp;&emsp;由上可知，`class`占了3-bit，共$2^3=8$种可选值，`detail`各占了5-bit，均存在$2^5=32$种可选值。`class`目前有效的取值为0、2、4、5、7，其余的均为保留值(非法值)。不同的`class`所对应的`detail`的有效取值是不同的，我们将所有有效的`class`的`detail`的取值整理如下表所示：
+
 <p style="text-align:center;">class和detail取值组合情况表 </p> 
+    
 <table><tr><th rowspan=2 colspan=3></th><th rowspan=1 colspan=5 style="text-align:center;">class</th></tr><tr><th style="text-align:center;">0<br>(Method)</th><th style="text-align:center;">2<br>(Success)</th><th style="text-align:center;">4<br>(Client Error)</th><th style="text-align:center;">5<br>(Server Error)</th><th style="text-align:center;">7<br>(Signaling Codes)</th></tr><tr><th rowspan=14 colspan=2>detail</th><td style="text-align:center;font-weight:bold;">0</td><td style="text-align:center;">EMPTY</td><td style="text-align:center;">--</td><td style="text-align:center;">Bad Request</td><td style="text-align:center;">Internal Server Error</td><td style="text-align:center;">Unassigned</td></tr><tr><td style="text-align:center;font-weight:bold;">1</td><td style="text-align:center;">GET</td><td style="text-align:center;">Created</td><td style="text-align:center;">Unauthorized</td><td style="text-align:center;">Not Implemented</td><td style="text-align:center;">CSM</td></tr><tr><td style="text-align:center;font-weight:bold;">2</td><td style="text-align:center;">POST</td><td style="text-align:center;">Deleted</td><td style="text-align:center;">Bad Option</td><td style="text-align:center;">Bad Gateway</td><td style="text-align:center;">Ping</td></tr><tr><td style="text-align:center;font-weight:bold;">3</td><td style="text-align:center;">PUT</td><td style="text-align:center;">Valid</td><td style="text-align:center;">Forbidden</td><td style="text-align:center;">Service Unavailable</td><td style="text-align:center;">Pong</td></tr><tr><td style="text-align:center;font-weight:bold;">4</td><td style="text-align:center;">DELETE</td><td style="text-align:center;">Changed</td><td style="text-align:center;">Not Found</td><td style="text-align:center;">Gateway Timeout</td><td style="text-align:center;">Release</td></tr><tr><td style="text-align:center;font-weight:bold;">5</td><td style="text-align:center;">FETCH</td><td style="text-align:center;">Content</td><td style="text-align:center;">Method Not Allowed</td><td style="text-align:center;">Proxying Not Supported</td><td style="text-align:center;">Abort</td></tr><tr><td style="text-align:center;font-weight:bold;">6</td><td style="text-align:center;">PATCH</td><td style="text-align:center;">--</td><td style="text-align:center;">Not Acceptable</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td></tr><tr><td style="text-align:center;font-weight:bold;">7</td><td style="text-align:center;">iPATCH</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td></tr><tr><td style="text-align:center;font-weight:bold;">8</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td><td style="text-align:center;">Request Entity Incomplete</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td></tr><tr><td style="text-align:center;font-weight:bold;">9</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td><td style="text-align:center;">Conflict</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td></tr><tr><td style="text-align:center;font-weight:bold;">12</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td><td style="text-align:center;">Precondition Failed</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td></tr><tr><td style="text-align:center;font-weight:bold;">13</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td><td style="text-align:center;">Request Entity Too Large</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td></tr><tr><td style="text-align:center;font-weight:bold;">15</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td><td style="text-align:center;">Unsupported Content-Format</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td></tr><tr><td style="text-align:center;font-weight:bold;">31</td><td style="text-align:center;">--</td><td style="text-align:center;">Continue</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td><td style="text-align:center;">--</td></tr></table>
+    
 ##### 4.1.4.1 class
 &emsp;&emsp;`class`的所有取值中只有0表示请求，更准确的说，只有**GET(0.01)**、**POST(0.02)**、**PUT(0.03)**、**DELETE(0.04)**这几个`method`用来表示`CoAp`中的请求数据。而响应码则有三类，分别是2、4、5。
 &emsp;&emsp;因此，更准确的说，一个报文是请求还是响应，取决于`Code`字段的前3-bit的值。
@@ -432,6 +437,8 @@ bool is_cache_key = (option_number & 0x1E) == 0x1C
 &emsp;&emsp;由于`Option Delta`只占用了4-bit，其取值范围有限($[0, 16]$)，需要进行扩展，因此就有了这个字段。该字段的长度取决于`Option Delta`的值，如下表所示：
     
 <table><tr><th rowspan=2 colspan=2></th><th colspan=2 rowspan=1 style="text-align:center;">Option Delta(extended)</th><th rowspan=2 style="text-align:center;">Option Delta值计算方式</th></tr><tr><th style="text-align:center;">长度(字节)</th><th style="text-align:center;">取值范围</th></tr><tr><th rowspan=4>Option Delta字段值</th><td style="text-align:center;font-weight:bold;">0~12</td><td style="text-align:center;">0</td><td style="text-align:center;">0</td><td style="text-align:center;">Option Delta</td></tr><tr><td style="text-align:center;font-weight:bold;">13</td><td style="text-align:center;">1</td><td style="text-align:center;">0~255</td><td style="text-align:center;">Option Delta(extended) + 13</td></tr><tr><td style="text-align:center;font-weight:bold;">14</td><td style="text-align:center;">2</td><td style="text-align:center;">0~65535</td><td style="text-align:center;">Option Delta(extended) + 269</td></tr><tr><td style="text-align:center;font-weight:bold;">15</td><td style="text-align:center;">未定义</td><td style="text-align:center;">未定义</td><td style="text-align:center;">保留值，暂不使用。<br>此时Delta Option所属字节必须为0xFF。</td></tr></table>
+
+
 #### 4.3.3  Option Length
 
 &emsp;&emsp;这个字段作用单一，仅仅用来表示`Option`中`Option Value`的实际长度，4-bit，无符号整数。与`Option Delta`类似，它也需要结合`Option Length(extended)`字段的值才能计算出最终`Option Value`的长度。
@@ -441,6 +448,8 @@ bool is_cache_key = (option_number & 0x1E) == 0x1C
 &emsp;&emsp;同样的，由于`Option Length`只占用了4-bit，其取值范围也是$[0, 16]$个字节，因此需要进行扩展，以便`Option`能承载长的数据。该字段的长度也取决于`Option Length`的值，如下表所示：
     
 <table><tr><th rowspan=2 colspan=2></th><th colspan=2 rowspan=1 style="text-align:center;">Option Length(extended)</th><th rowspan=2 style="text-align:center;">Option Length值计算方式</th></tr><tr><th style="text-align:center;">长度(字节)</th><th style="text-align:center;">取值范围</th></tr><tr><th rowspan=4>Option Length字段值</th><td style="text-align:center;font-weight:bold;">0~12</td><td style="text-align:center;">0</td><td style="text-align:center;">0</td><td style="text-align:center;">Option Length</td></tr><tr><td style="text-align:center;font-weight:bold;">13</td><td style="text-align:center;">1</td><td style="text-align:center;">0~255</td><td style="text-align:center;">Option Length(extended) + 13</td></tr><tr><td style="text-align:center;font-weight:bold;">14</td><td style="text-align:center;">2</td><td style="text-align:center;">0~65535</td><td style="text-align:center;">Option Length(extended) + 269</td></tr><tr><td style="text-align:center;font-weight:bold;">15</td><td style="text-align:center;">未定义</td><td style="text-align:center;">未定义</td><td style="text-align:center;">保留值，暂不使用。<br>此时Delta Length所属字节必须为0xFF。</td></tr></table>
+
+
 #### 4.3.5 Optioin Value
 &emsp;&emsp;这个字段是`Option`的负载部分，它具体表示什么含义以及是什么数据类型需要根据累和求出的`Option Numer`来判断。RFC文档中目前定义了**15**种含义，**4**种数据格式。结合前面提到的`Option`三大属性有如下组合表：
 ```bash
@@ -528,3 +537,10 @@ bool is_cache_key = (option_number & 0x1E) == 0x1C
 ### 4.5 后记
 
 &emsp;&emsp;RFC阅读起来耗时耗力，以上内容虽然没有囊括协议的所有细节，但已经足以对`CoAP`报文有较为全面的理解并编写解析代码，就暂时写到这里，后续有时间再来补充剩余部分。
+
+### 4.6 参考文献
+&emsp;&emsp;1.  [CoAP RFC](https://tools.ietf.org/html/rfc7252)；
+&emsp;&emsp;2.  [物联网协议之CoAP协议开发学习笔记之协议详解](https://segmentfault.com/a/1190000011533594#item-4)；
+&emsp;&emsp;3.  [物联网协议之CoAP协议开发学习笔记](https://segmentfault.com/a/1190000011516219)；
+&emsp;&emsp;4.  [CoAP协议简介](https://www.jianshu.com/p/7fec0916a0d3)。
+
