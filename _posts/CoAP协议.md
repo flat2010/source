@@ -9,7 +9,6 @@ toc: true
 date: 2016-10-26 11:53:20
 ---
 
-
 <img src="CoAP协议/CoAP协议抽象层次结构模型.png" width="400" height="250" />
 
 ***
