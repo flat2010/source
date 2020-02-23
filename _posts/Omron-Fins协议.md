@@ -123,7 +123,7 @@ toc: true
 - `0x01`~`0x7E`： `YSMAC NET`网络中的节点号；
 - `0xFF`： 广播传输。
 
-&emsp;&emsp;Omron的官方手册中，该字段只能取上述值，然而网上的实际抓包发现会有其它值出现，被wireshark标记为**unknown**，因此**暂时关闭解码器中对该字段的校验**。
+&emsp;&emsp;Omron的官方手册中，该字段只能取上述值，然而网上的实际抓包发现会有其它值出现，被wireshark标记为**unknown**。
 
 #### 2.1.7 DA2字段
 
@@ -133,7 +133,7 @@ toc: true
 - `0xFE`： SYSMAC NET Link Unit or SYSMAC LINK Unit connected to network；
 - `0x10`~`0x1F`：CPU总线单元 ，其值等于10 + 单元号(前端面板中配置的单元号)。
 
-&emsp;&emsp;Omron的官方手册中，该字段只能取上述值，然而网上的实际抓包发现会有其它值出现，被wireshark标记为**unknown**，同样的，**暂时关闭解码器中对该字段的校验**。
+&emsp;&emsp;Omron的官方手册中，该字段只能取上述值，然而网上的实际抓包发现会有其它值出现，被wireshark标记为**unknown**。
 
 #### 2.1.8 SNA字段
 
