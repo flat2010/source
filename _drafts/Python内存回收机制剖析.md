@@ -1,7 +1,7 @@
 ---
 title: Python内存回收机制剖析
 tags: [Python, 内存]
-categories: [Python]
+categories: [编程语言]
 comments: true
 toc: true
 date: 2019-08-08 23:01:02

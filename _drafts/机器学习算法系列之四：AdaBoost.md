@@ -2,7 +2,7 @@
 title: 机器学习算法系列之四：AdaBoost
 date: 2017-02-21 21:29:40
 tags: [机器学习, 算法, AdaBoost]
-categories: [机器学习, 提升方法] 
+categories: [机器学习] 
 comments: true
 toc: true
 ---
@@ -130,6 +130,7 @@ $$
 
 $$
 w_i^{m+1} = \beta \cdot w_i^m
+\label{update_weights}
 \tag{2 - 2 - 2}
 $$
 
@@ -150,19 +151,124 @@ $$
 \tag{2 - 2 - 3}
 $$
 
-&emsp;&emsp;$\beta_m$的函数图象如下所示：
+&emsp;&emsp;$\beta_m$关于$\varepsilon_m$的函数图象如下所示：
 
 <img src="机器学习算法系列之四：AdaBoost/权重更新系数和误差的曲线.png" width="400" height="250" />
 
 ### 2.3 定量关系
 
-&emsp;&emsp;确定了组合和更新问题的方案之后，我们就需要确定上述各个参数的定量表达式，最终解决这两个问题。
+&emsp;&emsp;确定了组合和更新问题的方案之后，我们就需要确定上述各个参数的定量表达式，最终解决这两个问题。由于二分类只是多分类的特列，因此下文针对的都是多分类的情况。
+
+#### 2.3.1 样本权重
+
+&emsp;&emsp;权重通常有两种：一种是满足概率分布的即$\sum\limits_{i=1}^{N} w_i= 1(w_i >= 0)$，另一种则是不满足的。Adaboost中没有对权重做限制，这样做的好处是算法的适用范围更广，劣势就是可解释性不强也不方便模型进行训练。因此对于给定的初始权重需要将其转换成概率分布，具体做法是：
+
+$$
+\vec{P^m_w} = \frac{\vec{W^m}}{\sum \limits_{i=1}^{N} w^m_i}
+\tag{2 - 3 - 1}
+$$
+
+&emsp;&emsp;为方便叙述，下文中仍然用符号$\vec{W^m}$及$w^m_i$表示第$m$轮训练中服从概率分布（归一化后）的样本权重，而用符号$Z_m=\sum \limits_{i=1}^{N} w^m_i$表示第$m$轮训练的归一化因子。
+
+&emsp;&emsp;需要说明的一点是，在整个模型的训练结束前，由于每轮训练结束后会更新权重系数（式$\ref{update_weights}$），导致权重系数的概率分布特性被破坏，因此每轮训练结束更新完样本权重后都需要重新执行一次归一化操作，如下所示：
+
+$$
+w^{m+1}_i = \frac{1}{Z_m} \cdot (\beta^m \cdot w^m_i)
+\label{normalized_weights}
+\tag{2 - 3 - 2}
+$$
+
+&emsp;&emsp;为了简化算法的描述，我们可以把样本权重的更新和归一化合并到一步来完成，即下式：
+
+$$
+w^{m+1}_i = \frac{\beta^m}{Z_m} \cdot w^m_i, \quad z_m = \sum \limits_{i=1}^{N} w^m_i
+\tag{2 - 3 - 3}
+\label{normalized_weights_simplyfied}
+$$
+
+
+<details>
+<summary style="color:gray;font-size:8pt;">点此查看注释</summary>
+<p align="left" style="color:gray;font-size:8pt;">&emsp;&emsp;李航老师的《统计学习方法》中就将样本权重的更新和归一化放到了一步来做。这样的好处是算法的描述会更简洁，数学表达式看起来更优雅，而劣势就是不太方便读者理解为什么要这么做。
+
+&emsp;&emsp;此外不得不提的一点是，李航老师关于Adaboost算法的描述（算法8.1）的第一步容易让人产生困惑：
+
+&emsp;&emsp;为什么第一步是将训练数据的权值分布初始化成离散型均匀分布$w_1=\frac{1}{N}$？是算法本身的要求吗？其它分布不行吗？
+
+&emsp;&emsp;实际上样本的初始权重分布可以是任意类型的，Adaboost算法对此并无苛求。显然只有当我们对于训练样本不具备先验知识时，将其初始化成离散均匀分布才是合理且自然的。
+
+&emsp;&emsp;Adaboost的Paper中则是将更新和归一化分开的。因为我们要将样本权重送入弱学习器来得到弱分类器，因此样本在送入弱学习器之前其权重一定要满足概率分布。Paper中的描述更方便读者理解模型训练的整个过程，不会误导读者。</p>
+</details>
+
+&emsp;&emsp;上式虽然解决了样本权重的分布问题，但仍不能满足要求。原因就在于上式对于那些被误分类的样本和被正确分类样本的更新是相同的，下一轮训练时无法突出被误分类的样本。
+
+&emsp;&emsp;所以我们还要修改上式，以便区别更新正确分类和误分类样本的权重。实现方法有三种：
+
+- 减小正确分类样本权重，误分类样本权重不变；
+
+- 正确分类样本权重不变，增大误分类样本权重；
+
+- 减小正确分类样本权重，同时增大误分类样本权重。
+
+&emsp;&emsp;考虑到样本权重更新后还要做归一化，因此我们只需要简单的减小正确分类或者增大误分类样本权重即可，没必要同时去更新。这样在代码实现时可以减少计算量。
+
+&emsp;&emsp;Paper中采用的是第一种即**减小正确分类样本权重，保持误分类样本权重不变**，如下式所示：
+$$
+w_i^{m+1} = \frac{(\beta^m)^{I(f(x_i), \ y_i)}}{z_m}w_i^m = 
+\begin{split}
+\begin{cases}
+\frac{\beta^m}{z_m} \cdot w_i^m &\quad f(x_i) = y_i \\
+\\
+\frac{1}{z_m} \cdot w_i^m &\quad f(x_i) \neq y_i
+\end{cases}
+\end{split}
+\tag{2 - 3 - 4}
+$$
+&emsp;&emsp;上式中虽然误分类样本的权重没变，但是由于权重归一化系数$z_m$的存在，误分类样本的权重实际上还是被增大了。
+
+<details>
+<summary style="color:gray;font-size:8pt;">点此查看证明</summary>
+<p align="left" style="color:gray;font-size:8pt;">&emsp;&emsp;假定第$m$轮训练时样本权重（已归一化）为：
+ $$\vec{W^m} = (w_1^m, \cdots , w_i^m, \cdots, w_N^m), \quad \sum \limits_{i=1}^N w_i^m = 1$$
+    &emsp;&emsp;同时假定该轮训练中正确分类样本数为$k(k \in [0, N])$个，则第$m+1$轮训练时未归一化的样本权重为：
+$$
+\vec{W^{m+1}} = (w_1^m, \cdots , \underbrace{\beta^m \cdot w_i^m, \cdots, \beta^m \cdot w_{i+k}^m}_{k}, \cdots, w_N^m), \quad \beta \in [0,1)    
+$$
+    &emsp;&emsp;第$m$轮训练的归一化因子为：
+$$
+\begin{split}
+z^m &= w_1^m + \cdots + \underbrace{\beta^m \cdot w_i^m + \cdots + \beta^m \cdot w_{i+k}^m}_{k} + \cdots + w_N^m \\
+    &\le w_1^m + \cdots + \underbrace{1 \cdot w_i^m + \cdots + 1 \cdot w_{i+k}^m}_{k} + \cdots + w_N^m \\
+    &= 1 \\
+\frac{1}{z^m} &\ge 1
+\end{split}
+$$
+&emsp;&emsp;因此有：
+$$
+\begin{split}
+\frac{z^m}{\beta_m} &= \frac{1}{\beta_m} \cdot w_1^m + \cdots + w_i^m + \cdots + w_{i+k} + \cdots + \frac{1}{\beta_m} \cdot w_N^m \\
+    &\ge 1 \cdot w_1^m + \cdots + w_i^m + \cdots + w_{i+k}^m + \cdots + 1 \cdot w_N^m \\
+    &= 1 \\
+\frac{\beta_m}{z^m} &=\frac{1}{z^m/\beta^m} \le 1
+\end{split}    
+$$
+
+&emsp;&emsp;则第$m+1$轮训练时归一化后的样本权重为：
+$$
+\vec{W^{m+1}} = (\frac{w_1^m}{z_m}, \cdots , \frac{\beta_m}{z_m} \cdot w_i^m, \cdots, \frac{\beta_m}{z_m} \cdot w_{i+k}^m, \cdots, \frac{w_N^m}{z_m}), \quad z_m \in (0,1]    
+$$
+
+&emsp;&emsp;由此可以看出，第$m+1$轮训练时，只要本轮有被正确分类的样本（$k>0$），则被误分类的样本其权重实际上将会被增大，而正确分类样本的权重实际上将会被减小。
+</p>
+</details>
+
+
 
 #### 2.3.1 总误差
 
 &emsp;&emsp;对任意一轮的弱分类器$h_m(x)$，其表现即准确率/误差率当然可以采用传统的正确/错误分类样本所占比例来度量，但这样弱分类器就无法利用样本的权重系数。
 
-&emsp;&emsp;有鉴于此，原Paper中使用了**所有误分类样本的权重之和**即总误差作为弱分类器的评估指标，如下：
+&emsp;&emsp;有鉴于此，原Paper中使用了**所有误分类样本的归一化权重之和**即总误差作为弱分类器的评估指标，如下：
 
 $$
 \begin{split}
@@ -171,7 +277,6 @@ $$
 \end{split}
 \tag{2 - 3 - 1}
 $$
-
 
 #### 2.3.2 弱分类器选择
 
